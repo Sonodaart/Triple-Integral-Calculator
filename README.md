@@ -51,7 +51,7 @@ We have that the value of the integral is equal to the measure of the volume of 
 
 ijnn $\iiint_Df(x,y,z)dD = m_{4}(S_f)$
 
-,$ f(x,y,z)dD = m_{4}(S_f) $
+jnn $$\iiint_Df(x,y,z)dD = m_{4}(S_f)$$
 
 The function $f$ is provided from the user, and it's supposed that function has an integral(this means it can also be $\pm\infty$).
 The domain $D$ is also given as input, in the form of the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. From this we can see that the border is given by the intersection of two $C^{\infty}(\mathbb{R}^3)$ functions, and thus is also normal and regular.
