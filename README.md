@@ -10,11 +10,9 @@
 Triple Integral calculator
 
 │
-
 ├── bin // executable 
 
 │ └── main
-
 ├── doc // documentation 
 
 ├── include // headers (.h)
