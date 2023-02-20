@@ -8,7 +8,7 @@
 	- [Numerical Solution](#numerical-solution)
 # File Management
 Triple Integral calculator
-
+```
 │
 
 ├── bin // executable 
@@ -38,13 +38,10 @@ Triple Integral calculator
 │ └── math3D.cpp
 
 ├── test
-
 │ └── function.cpp 
-
 ├── Makefile
-
 └── README.md
-
+```
 # Usage
 
 # Underlying theory
