@@ -1,11 +1,3 @@
-./         Makefile and configure scripts.
-./src      General sources (.cpp)
-./include  Header files that expose the public interface and are to be installed (.h)
-./lib      Library build directory (.o)
-./bin      Tools build directory (executables)
-./tools    Tools sources
-./test     Test suites that should be run during a `make test`
-
 # Triple Integral calculator
 
 ##  Table of Contents
@@ -16,23 +8,41 @@
 	- [Numerical Solution](#numerical-solution)
 # File Management
 Triple Integral calculator
+
 │
+
 ├── bin // executable 
+
 │ └── main
+
 ├── doc // documentation 
-├── include // headers
+
+├── include // headers (.h)
+
 │ ├── error.h
+
 │ ├── linker.h
+
 │ ├── main.h
+
 │ └── math3D.h 
-├── lib
-├── src // source files
+
+├── lib // library build directory (.o)
+
+├── src // general sources (.cpp)
+
 │ ├── linker.cpp
+
 │ ├── main.cpp
+
 │ └── math3D.cpp
+
 ├── test
-│ └── math3D.h 
+
+│ └── function.cpp 
+
 ├── Makefile
+
 └── README.md
 
 # Usage
@@ -72,6 +82,7 @@ Having established a domain the next step is actually calculating the integral u
 The first column $R_{i,1} \forall i\geq1$ is given by the 3D trapezoidal rule.
 The rule is implemented as follows:
 ![trapezoid method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/trapezoid3D.png)
+
 We compute a regular trapezoid rule over the x axis on the red dots. Each red dot is the result of a regular trapezoidal rule over the y axis(the red lines). And each blue(or red) dot is again the result of a regular trapezoidal rule over the z axis(the blue lines). The regular trapezoidal rule is:
 $$
 R_{i,1} = \frac{h}{2}[f(a)+2\sum\limits_{k=1}^{2^{i}-1} f(a+kh)+f(b)]
@@ -80,7 +91,7 @@ with $h$ the step-size. The reason why the upper limit of the sum is $2^{i}-1$ i
 
 At this point to get the next values in each row we take advantage of Richardson's Extrapolation. This formula cancels the error contributes, making each step more precise. In particular the error of $R_{i,j}$ is of $O(h^{2j})$. The way we cancel the contributes is given by the following relation $R_{i,j}=\frac{4^{j-1}R{i,j-1}-R_{i-1,j-1}}{4^{j-1}-1}$.
 This is thus how we proceed in filling the table of approximations.
-![Romberg's method](https://miro.medium.com/v2/resize:fit:720/format:webp/1*haJeX57EYzB68sCahttRsA.png)
+![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
 
 
 
