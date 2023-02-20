@@ -49,7 +49,7 @@ Triple Integral calculator
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
 We have that the value of the integral is equal to the measure of the volume of the surface. In other words, given a function $f(x,y,z):D\subseteq \mathbb{R}^3 \rightarrow \mathbb{R}^3$, being $D$ a normal regular domain, we have.
 <div class="katex">
-$$ \iiint_D f(x,y,z)dD = m_{4}(S_f) $$
+$ \iiint_D f(x,y,z)dD = m_{4}(S_f) $
 </div>
 The function $f$ is provided from the user, and it's supposed that function has an integral(this means it can also be $\pm\infty$).
 The domain $D$ is also given as input, in the form of the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. From this we can see that the border is given by the intersection of two $C^{\infty}(\mathbb{R}^3)$ functions, and thus is also normal and regular.
