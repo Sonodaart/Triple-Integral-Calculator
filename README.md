@@ -49,7 +49,7 @@ Triple Integral calculator
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
 We have that the value of the integral is equal to the measure of the volume of the surface. In other words, given a function $f(x,y,z):D\subseteq \mathbb{R}^3 \rightarrow \mathbb{R}^3$, being $D$ a normal regular domain, we have.
 
-ijnn $  f(x,y,z)dD = m_{4}(S_f) $
+ijnn $f(x,y,z)dD = m_{4}(S_f)$
 
 ,$ f(x,y,z)dD = m_{4}(S_f) $
 
