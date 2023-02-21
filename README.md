@@ -56,8 +56,8 @@ The only thing to do is calculate the values assumed by each coordinate. Let's d
 	So, evaluating the inequality at such $\tilde{y},\tilde{z}$ we get $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}+r>0$. We define $k \equiv -\frac{b^2}{4B}-\frac{c^2}{4C}+r$, such that we have $Ax^2+ax+k>0$.
 	At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By studying the discriminant and the sign of A we can get different solutions:
 	- $A>0$
-		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
-		- $a^2-4Ak< 0 \Rightarrow x \in (-\infty,\frac{-a-\sqrt{a^2-4Ak}}{2A}) \cup (\frac{-a+\sqrt{a^2-4Ak}}{2A},+\infty)$, but since we want the max and min we get $(-\infty,+\infty)$
+		- $a^2-4Ak\geq 0 \Rightarrow x \in (-\infty,\frac{-a-\sqrt{a^2-4Ak}}{2A}) \cup (\frac{-a+\sqrt{a^2-4Ak}}{2A},+\infty)$, but since we want the max and min we get $(-\infty,+\infty)$
+		- $a^2-4Ak< 0$ since we want where the parable is above $0$, and it doesn't cross $0$, we have that every value satisfy the equation, and thus $x \in (-\infty,+\infty)$.
 	- $A<0$
 		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 		- $a^2-4Ak< 0$, this time it has no solutions but the parable is below $0$, and thus we have no solutions.
