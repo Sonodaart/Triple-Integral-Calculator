@@ -82,7 +82,7 @@ Let's now proceed with the assumption $A=0$ (and by also restoring the initial v
 	- $a<0$, the same reasoning works, except that this time when dividing by $a$ we have to switch inequality, getting $x<-\frac{k}{a}$.
 
 	A last case must be mentioned, where $a=0$. Under these conditions we have $By^2+by+Cz^2+cz+r>0$, which is either always true for each $x$ if there exists some $\tilde{y},\tilde{z}$ for which it holds, or always false independently from $x$. This check can be done once again with some intuition, seeing that since $B,C<0$ this is an ellipse, which with $B\equiv -B$ and $C\equiv -C$ can be rewritten as $r>By^2-by+Cz^2-cz$. By squaring we get $r>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}$.
-	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $\(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2<k$. If $k\geq0$ there exists at least one point that is in the ellipse.
+	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2<k$. If $k\geq0$ there exists at least one point that is in the ellipse.
 - Case $B=0 \lor C=0$:
 
 	If either one of the two is $0$, let's say $C=0$, it remains the contribute of $cz$, which spans on $(-\infty,+\infty)$. So as long as $c\neq0$ every $x$ is a solution.
