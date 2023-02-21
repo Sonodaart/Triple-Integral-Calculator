@@ -51,6 +51,7 @@ Given that the domain is the intersection of two inequalities of the form $Ax^2+
 The only thing to do is calculate the values assumed by each coordinate. Let's do the calculations for $x$, and for the others follows with the same logic.
 
 - Case $A,B,C\neq0$:
+
 The first thing we want to do is rewriting the inequality as $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}+r\gtreqless0$ by completing the squares. We can see that with a proper choice of $y$ and $z$ we can make their squares $0$. In addition we can also impose the inequality to be $>$ or $\geq$ by changing accordingly the signs of all the coefficients(let's say it's $>$).
 So, evaluating the inequality at such $\tilde{y},\tilde{z}$ we get $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}+r>0$. We define $k \equiv -\frac{b^2}{4B}-\frac{c^2}{4C}+r$, such that we have $Ax^2+ax+k>0$.
 At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By studying the discriminant and the sign of A we can get different solutions:
@@ -61,11 +62,12 @@ At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By stu
 		- $a^2-4Ak\geq 0 \Rightarrow x \in (-\infty,+\infty)$
 		- $a^2-4Ak< 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 - Case $A=0 \land B,C\neq0$:
-We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
+
+	We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
 	- $a>0$ that gives us $x>\frac{k}{a}$
 	- $a<0$ that gives us $x<\frac{k}{a}$
 - Case $A,B\neq0 \land C=0$ (same goes for $A,C\neq0 \land B=0$):
-Our inequality reduces to $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+cz+r>0$, where I already swapped signs to the coefficients in order to always get the $>$ or $\geq$ case. If $c\neq0$ we have that the term $cz$ can assume all real numbers, thus compensating for every possible value of $Ax^2+ax$. So with $c\neq0$ we have $x \in (-\infty,+\infty)$.
+	Our inequality reduces to $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+cz+r>0$, where I already swapped signs to the coefficients in order to always get the $>$ or $\geq$ case. If $c\neq0$ we have that the term $cz$ can assume all real numbers, thus compensating for every possible value of $Ax^2+ax$. So with $c\neq0$ we have $x \in (-\infty,+\infty)$.
 The case $c=0$ gives us instead $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+r>0$. This is very similar to the one analyzed in the first point. We can define $k\equiv-\frac{b^2}{4B}+r$, and under the same considerations as before we get similar results for $Ax^2+ax+k>0$.
 - Case $A,C=0 \land B\neq0$ (same goes for $A,B=0 \land B\neq0$):
 Again we follow the same steps as before, ending up with $ax+k>0$. To be noted that this is the second definition $k$, but symbolically has the same solutions as the second case.
