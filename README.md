@@ -64,8 +64,8 @@ The only thing to do is calculate the values assumed by each coordinate. Let's d
 - Case $A=0 \land B,C\neq0$:
 
 	We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
-		- $a>0$ that gives us $x>\frac{k}{a}$
-		- $a<0$ that gives us $x<\frac{k}{a}$
+	- $a>0$ that gives us $x>\frac{k}{a}$
+	- $a<0$ that gives us $x<\frac{k}{a}$
 - Case $A,B\neq0 \land C=0$ (same goes for $A,C\neq0 \land B=0$):
 	Our inequality reduces to $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+cz+r>0$, where I already swapped signs to the coefficients in order to always get the $>$ or $\geq$ case. If $c\neq0$ we have that the term $cz$ can assume all real numbers, thus compensating for every possible value of $Ax^2+ax$. So with $c\neq0$ we have $x \in (-\infty,+\infty)$.
 	The case $c=0$ gives us instead $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+r>0$. This is very similar to the one analyzed in the first point. We can define $k\equiv-\frac{b^2}{4B}+r$, and under the same considerations as before we get similar results for $Ax^2+ax+k>0$.
