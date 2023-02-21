@@ -52,9 +52,9 @@ The only thing to do is calculate the values assumed by each coordinate. Let's d
 
 - Case $A,B,C\neq0$:
 
-The first thing we want to do is rewriting the inequality as $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}+r\gtreqless0$ by completing the squares. We can see that with a proper choice of $y$ and $z$ we can make their squares $0$. In addition we can also impose the inequality to be $>$ or $\geq$ by changing accordingly the signs of all the coefficients(let's say it's $>$).
-So, evaluating the inequality at such $\tilde{y},\tilde{z}$ we get $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}+r>0$. We define $k \equiv -\frac{b^2}{4B}-\frac{c^2}{4C}+r$, such that we have $Ax^2+ax+k>0$.
-At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By studying the discriminant and the sign of A we can get different solutions:
+	The first thing we want to do is rewriting the inequality as $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}+r\gtreqless0$ by completing the squares. We can see that with a proper choice of $y$ and $z$ we can make their squares $0$. In addition we can also impose the inequality to be $>$ or $\geq$ by changing accordingly the signs of all the coefficients(let's say it's $>$).
+	So, evaluating the inequality at such $\tilde{y},\tilde{z}$ we get $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}+r>0$. We define $k \equiv -\frac{b^2}{4B}-\frac{c^2}{4C}+r$, such that we have $Ax^2+ax+k>0$.
+	At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By studying the discriminant and the sign of A we can get different solutions:
 	- $A>0$
 		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 		- $a^2-4Ak< 0 \Rightarrow x \in (-\infty,\frac{-a-\sqrt{a^2-4Ak}}{2A}) \cup (\frac{-a+\sqrt{a^2-4Ak}}{2A},+\infty)$, but since we want the max and min we get $(-\infty,+\infty)$
@@ -64,19 +64,21 @@ At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By stu
 - Case $A=0 \land B,C\neq0$:
 
 	We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
-	- $a>0$ that gives us $x>\frac{k}{a}$
-	- $a<0$ that gives us $x<\frac{k}{a}$
-- Case $A,B\neq0 \land C=0$ (same goes for $A,C\neq0 \land B=0$):
+		- $a>0$ that gives us $x>\frac{k}{a}$
+		- $a<0$ that gives us $x<\frac{k}{a}$
+	- Case $A,B\neq0 \land C=0$ (same goes for $A,C\neq0 \land B=0$):
 	Our inequality reduces to $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+cz+r>0$, where I already swapped signs to the coefficients in order to always get the $>$ or $\geq$ case. If $c\neq0$ we have that the term $cz$ can assume all real numbers, thus compensating for every possible value of $Ax^2+ax$. So with $c\neq0$ we have $x \in (-\infty,+\infty)$.
-The case $c=0$ gives us instead $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+r>0$. This is very similar to the one analyzed in the first point. We can define $k\equiv-\frac{b^2}{4B}+r$, and under the same considerations as before we get similar results for $Ax^2+ax+k>0$.
+	The case $c=0$ gives us instead $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+r>0$. This is very similar to the one analyzed in the first point. We can define $k\equiv-\frac{b^2}{4B}+r$, and under the same considerations as before we get similar results for $Ax^2+ax+k>0$.
 - Case $A,C=0 \land B\neq0$ (same goes for $A,B=0 \land B\neq0$):
-Again we follow the same steps as before, ending up with $ax+k>0$. To be noted that this is the second definition $k$, but symbolically has the same solutions as the second case.
+
+	Again we follow the same steps as before, ending up with $ax+k>0$. To be noted that this is the second definition $k$, but symbolically has the same solutions as the second case.
 - Case $A,B,C=0$:
-The inequality is reduced to $ax+by+cz+r>0$. Here if either $b=0$ or $c=0$ we have that the term can assume values from $-\infty$ to $+\infty$, meaning that the $x$ too can assume all these values.
-To be noted that the case $a=0$ with either $b\neq0 \lor c=0$ gives an inequality of type $by+r>0$ for example. This doesn't depend on $x$, and can be verified for certain $y$, thus it can assume all values of $x$.
-Concluding, we have to watch the case $b,c=0$ with and without $a\neq0$.
-So, if $a\neq0$ we have $ax+r>0$. This again has the same solutions discussed for the inequality of type $ax+k>0$.
-Let's finally watch the last case, where $a=0$. The inequality has constant truth value, and is $r>0$. This is either always true or false for every $x$.
+
+	The inequality is reduced to $ax+by+cz+r>0$. Here if either $b=0$ or $c=0$ we have that the term can assume values from $-\infty$ to $+\infty$, meaning that the $x$ too can assume all these values.
+	To be noted that the case $a=0$ with either $b\neq0 \lor c=0$ gives an inequality of type $by+r>0$ for example. This doesn't depend on $x$, and can be verified for certain $y$, thus it can assume all values of $x$.
+	Concluding, we have to watch the case $b,c=0$ with and without $a\neq0$.
+	So, if $a\neq0$ we have $ax+r>0$. This again has the same solutions discussed for the inequality of type $ax+k>0$.
+	Let's finally watch the last case, where $a=0$. The inequality has constant truth value, and is $r>0$. This is either always true or false for every $x$.
 
 ### Romberg's method + Richardson's Extrapolation
 Having established a domain the next step is actually calculating the integral using Romberg's algorithm. It goes as following:
@@ -92,6 +94,7 @@ with $h$ the step-size. The reason why the upper limit of the sum is $2^{i}-1$ i
 At this point to get the next values in each row we take advantage of Richardson's Extrapolation. This formula cancels the error contributes, making each step more precise. In particular the error of $R_{i,j}$ is of $O(h^{2j})$. The way we cancel the contributes is given by the following relation $R_{i,j}=\frac{4^{j-1}R{i,j-1}-R_{i-1,j-1}}{4^{j-1}-1}$.
 This is thus how we proceed in filling the table of approximations.
 ![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
+
 To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i,j-1}|$.
 
 
