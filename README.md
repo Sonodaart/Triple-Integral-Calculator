@@ -61,12 +61,12 @@ From now on it's gonna be assumed that $A<0$.
 	If any of the 2 are $>0$, we have a situation similar to before, where for every $x$, there exist a $\tilde{y},\tilde{z}$ such that being big enough brings the left side above $0$.
 - Case $B<0 \land C<0$:
 
-	Rearranging the terms and practicing a movement of the origin we see that this is the equation of a generic ellipsoid $\frac{x^2}{a^2}+\frac{y^2}{b^2}+\frac{z}{c'^2}<1$(with here some generic $a,b,c \in \mathbb{R}$).
+	Rearranging the terms and practicing a movement of the origin we see that this is the equation of a generic ellipsoid $\frac{x^2}{a^2}+\frac{y^2}{b^2}+\frac{z}{c'^2} < 1$(with here some generic $a,b,c \in \mathbb{R}$).
 	We proceed to write $r>-Ax^2-ax-By^2-by-Cz^2-cz$. With this, since we know that $A,B,C<0$ we can change notation once a gain absorbing the signs into the coefficients getting $A\equiv-A,a\equiv-a,...$.
-	We end up with $Ax^2+ax+By^2+by+Cz^2+cz<r$. We now complete the squares getting $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}<r$. Since $B,C>0$ the squares of $y$ and $z$ gives values from $0$ to $+\infty$. Since we want the max range of values for $x$ we minor those terms with $0$, getting $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}<r$.
-	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k<0$. This is a simple second order equation with solutions(remembering that $A>0$):
+	We end up with $Ax^2+ax+By^2+by+Cz^2+cz < r$. We now complete the squares getting $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C} < r$. Since $B,C>0$ the squares of $y$ and $z$ gives values from $0$ to $+\infty$. Since we want the max range of values for $x$ we minor those terms with $0$, getting $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C} < r$.
+	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k < 0$. This is a simple second order equation with solutions(remembering that $A>0$):
 	- if discriminant$=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
-	- if discriminant$=a^2-4Ak<0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
+	- if discriminant$=a^2-4Ak < 0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
 
 Let's now proceed with the assumption $A=0$ (and by also restoring the initial values of the coefficients).
 - Case $B>0 \lor C>0$:
@@ -82,7 +82,7 @@ Let's now proceed with the assumption $A=0$ (and by also restoring the initial v
 	- $a<0$, the same reasoning works, except that this time when dividing by $a$ we have to switch inequality, getting $x<-\frac{k}{a}$.
 
 	A last case must be mentioned, where $a=0$. Under these conditions we have $By^2+by+Cz^2+cz+r>0$, which is either always true for each $x$ if there exists some $\tilde{y},\tilde{z}$ for which it holds, or always false independently from $x$. This check can be done once again with some intuition, seeing that since $B,C<0$ this is an ellipse, which with $B\equiv -B$ and $C\equiv -C$ can be rewritten as $r>By^2-by+Cz^2-cz$. By squaring we get $r>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}$.
-	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2 k$  $\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2 < k$. If $k\geq0$ there exists at least one point that is in the ellipse.
+	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2 < k$. If $k\geq0$ there exists at least one point that is in the ellipse.
 - Case $B=0 \lor C=0$:
 
 	If either one of the two is $0$, let's say $C=0$, it remains the contribute of $cz$, which spans on $(-\infty,+\infty)$. So as long as $c\neq0$ every $x$ is a solution.
