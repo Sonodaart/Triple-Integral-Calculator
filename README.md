@@ -49,39 +49,45 @@ The method used to solve the problem relies on romberg integration method.
 But let's begin by looking at the domain of integration.
 Given that the domain is the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. What we do is find the maximum and minimum value assumed by $x,y$ and $z$. After finding each max and min value we look for common intervals. This way we get a rectangular set that contains the domain $D$.
 The only thing to do is calculate the values assumed by each coordinate. Let's do the calculations for $x$, and for the others follows with the same logic.
+I'm gonna assume that if the inequality is either $<$ or $\leq$, the signs of the coefficients are changed($A\equiv-A,...$), and also the inequality into either $>$ or $\geq$. With this notation it's possible to tackle both $\gtreqless$ at the same time, having to deal only with the case $>$(or $\geq$. Since they're the same let's assume we have $>$.
 
-- Case $A,B,C\neq0$:
+- Case $A>0$:
 
-	The first thing we want to do is rewriting the inequality as $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}+r\gtreqless0$ by completing the squares. We can see that with a proper choice of $y$ and $z$ we can make their squares $0$. In addition we can also impose the inequality to be $>$ or $\geq$ by changing accordingly the signs of all the coefficients(let's say it's $>$).
-	So, evaluating the inequality at such $\tilde{y},\tilde{z}$ we get $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}+r>0$. We define $k \equiv -\frac{b^2}{4B}-\frac{c^2}{4C}+r$, such that we have $Ax^2+ax+k>0$.
-	At this point we solve for x, getting $x=\frac{-a\pm\sqrt{a^2-4Ak}}{2A}$. By studying the discriminant and the sign of A we can get different solutions:
-	- $A>0$
-		- $a^2-4Ak\geq 0 \Rightarrow x \in (-\infty,\frac{-a-\sqrt{a^2-4Ak}}{2A}) \cup (\frac{-a+\sqrt{a^2-4Ak}}{2A},+\infty)$, but since we want the max and min we get $(-\infty,+\infty)$
-		- $a^2-4Ak< 0$ since we want where the parable is above $0$, and it doesn't cross $0$, we have that every value satisfy the equation, and thus $x \in (-\infty,+\infty)$.
-	- $A<0$
-		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
-		- $a^2-4Ak< 0$, this time it has no solutions but the parable is below $0$, and thus we have no solutions.
-- Case $A=0 \land B,C\neq0$:
+	This case is trivial. Given big enough $x$ the inequality holds. Of course there may be intervals in between for which it doesn't hold, but since we want the max and min we immediately know them to be min$=-\infty$ and max$=+\infty$.
 
-	We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
-	- $a>0$ that gives us $x>\frac{k}{a}$
-	- $a<0$ that gives us $x<\frac{k}{a}$
+From now on it's gonna be assumed that $A<0$.
+- Case $B>0 \lor C>0$:
 
-	Also, we can consider here the case $a=0$. This is either always true if $k>0$, or always false.
-- Case $A,B\neq0 \land C=0$ (same goes for $A,C\neq0 \land B=0$):
-	Our inequality reduces to $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+cz+r>0$, where I already swapped signs to the coefficients in order to always get the $>$ or $\geq$ case. If $c\neq0$ we have that the term $cz$ can assume all real numbers, thus compensating for every possible value of $Ax^2+ax$. So with $c\neq0$ we have $x \in (-\infty,+\infty)$.
-	The case $c=0$ gives us instead $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+r>0$. This is very similar to the one analyzed in the first point. We can define $k\equiv-\frac{b^2}{4B}+r$, and under the same considerations as before we get similar results for $Ax^2+ax+k>0$.
-- Case $A,C=0 \land B\neq0$ (same goes for $A,B=0 \land B\neq0$):
+	If any of the 2 are $>0$, we have a situation similar to before, where for every $x$, there exist a $\tilde{y},\tilde{z}$ such that being big enough brings the left side above $0$.
+- Case $B<0 \land C<0$:
 
-	Again we follow the same steps as before, ending up with $ax+k>0$. To be noted that this is the second definition $k$, but symbolically has the same solutions as the second case.
-- Case $A,B,C=0$:
+	Rearranging the terms and practicing a movement of the origin we see that this is the equation of a generic ellipsoid $\frac{x^2}{a^2}+\frac{y^2}{b^2}+\frac{z}{c'^2}<1$(with here some generic $a,b,c \in \mathbb{R}$).
+	We proceed to write $r>-Ax^2-ax-By^2-by-Cz^2-cz$. With this, since we know that $A,B,C<0$ we can change notation once a gain absorbing the signs into the coefficients getting $A\equiv-A,a\equiv-a,...$.
+	We end up with $Ax^2+ax+By^2+by+Cz^2+cz<r$. We now complete the squares getting $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}<r$. Since $B,C>0$ the squares of $y$ and $z$ gives values from $0$ to $+\infty$. Since we want the max range of values for $x$ we minor those terms with $0$, getting $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C}<r$.
+	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k<0$. This is a simple second order equation with solutions(remembering that $A>0$):
+	- if discriminant$=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
+	- if discriminant$=a^2-4Ak<0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
 
-	The inequality is reduced to $ax+by+cz+r>0$. Here if either $b=0$ or $c=0$ we have that the term can assume values from $-\infty$ to $+\infty$, meaning that the $x$ too can assume all these values.
-	To be noted that the case $a=0$ with either $b\neq0 \lor c=0$ gives an inequality of type $by+r>0$ for example. This doesn't depend on $x$, and can be verified for certain $y$, thus it can assume all values of $x$.
-	Concluding, we have to watch the case $b,c=0$ with and without $a\neq0$.
-	So, if $a\neq0$ we have $ax+r>0$. This again has the same solutions discussed for the inequality of type $ax+k>0$.
-	Let's finally watch the last case, where $a=0$. The inequality has constant truth value, and is $r>0$. This is either always true or false for every $x$.
+Let's now proceed with the assumption $A=0$ (and by also restoring the initial values of the coefficients).
+- Case $B>0 \lor C>0$:
+	
+	If either of the 2 is $>0$, we have that exists a choice of big enough $\tilde{y},\tilde{z}$, such that the left side is greater than $0$. For this reason the max and min are once again $-\infty$ and $+\infty$.
+- Case $B,C<0$:
 
+	Rewriting the inequality $ax+By^2+by+Cz^2+cz+r>0$, we see that we have an arbitrarily large negative contribute from the $B$ and $C$. The $ax$ instead spans from $-\infty$ to $+\infty$ regardless of the sign of $a$.
+	From this observation we can see that the unbounded part is either $+\infty$ if $a>0$, or $-\infty$ if $a<0$, given a big enough choice of $ax$, and small enough of $y,z$.
+	Let's now find the finite bound. We rewrite the inequality as $ax+r>-By^2-by-Cz^2-cz$. We can change notation, calling $B\equiv-B$ and $C\equiv-C$, making them become both $>0$, getting $ax+r>By^2-by+Cz^2-cz$. We can once more complete the squares obtaining $ax+r>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}$.
+	Defining $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$ we get $ax+k>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2$. Let's analyze the two cases for $a$.
+	- $a>0$, we have that $x>\frac{1}{a}[(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-k]$. Since the squares are positive, and that we want the minimum value of $x$, in function of every $y,z$, we minor the squares by their least value, which is $0$, getting that $x>-\frac{k}{a}$.
+	- $a<0$, the same reasoning works, except that this time when dividing by $a$ we have to switch inequality, getting $x<-\frac{k}{a}$.
+
+	A last case must be mentioned, where $a=0$. Under these conditions we have $By^2+by+Cz^2+cz+r>0$, which is either always true for each $x$ if there exists some $\tilde{y},\tilde{z}$ for which it holds, or always false independently from $x$. This check can be done once again with some intuition, seeing that since $B,C<0$ this is an ellipse, which with $B\equiv -B$ and $C\equiv -C$ can be rewritten as $r>By^2-by+Cz^2-cz$. By squaring we get $r>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}$.
+	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2<k$. If $k\geq0$ there exists at least one point that is in the ellipse.
+- Case $B=0 \lor C=0$:
+
+	If either one of the two is $0$, let's say $C=0$, it remains the contribute of $cz$, which spans on $(-\infty,+\infty)$. So as long as $c\neq0$ every $x$ is a solution.
+	If both $B,C=0$, once again it's the same situation. The only exception is if both $b,c=0$. In this case it remains $ax+r>0$. The solutions are similar to before: if $a>0$ it's $x>-\frac{r}{a}$, else if $a<0$ it's $x<-\frac{r}{a}$, and if $a=0$ it's always true if $r>0$.
+	
 ### Romberg's method + Richardson's Extrapolation
 Having established a domain the next step is actually calculating the integral using Romberg's algorithm. It goes as following:
 The first column $R_{i,1} \forall i\geq1$ is given by the 3D trapezoidal rule.
@@ -113,83 +119,4 @@ Synchronization is one of the biggest features of StackEdit. It enables you to s
 - The file synchronization will keep one file of the workspace synced with one or multiple files in **Google Drive**, **Dropbox** or **GitHub**.
 	> Before starting to sync files, you must link an account in the **Synchronize** sub-menu.
 
-###  StarterKit Files
 
-```
-
-
-
-```
-
-
-## Publish a File
-
-You can publish your file by opening the **Publish** sub-menu and by clicking **Publish to**. For some locations, you can choose between the following formats:
-
-- Markdown: publish the Markdown text on a website that can interpret it (**GitHub** for instance),
-- HTML: publish the file converted to HTML via a Handlebars template (on a blog for example).
-
-## Update a publication
-
-After publishing, StackEdit keeps your file linked to that publication which makes it easy for you to re-publish it. Once you have modified your file and you want to update your publication, click on the **Publish now** button in the navigation bar.
-
-> **Note:** The **Publish now** button is disabled if your file has not been published yet.
-
-
-
-# Markdown extensions
-
-StackEdit extends the standard Markdown syntax by adding extra **Markdown extensions**, providing you with some nice features.
-
-> **ProTip:** You can disable any **Markdown extension** in the **File properties** dialog.
-
-
-## SmartyPants
-
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-
-## KaTeX
-
-You can render LaTeX mathematical expressions using [KaTeX](https://khan.github.io/KaTeX/):
-
-The *Gamma function* satisfying $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$ is via the Euler integral
-
-$$
-\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
-$$
-
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
