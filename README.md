@@ -59,8 +59,8 @@ The only thing to do is calculate the values assumed by each coordinate. Let's d
 		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 		- $a^2-4Ak< 0 \Rightarrow x \in (-\infty,\frac{-a-\sqrt{a^2-4Ak}}{2A}) \cup (\frac{-a+\sqrt{a^2-4Ak}}{2A},+\infty)$, but since we want the max and min we get $(-\infty,+\infty)$
 	- $A<0$
-		- $a^2-4Ak\geq 0 \Rightarrow x \in (-\infty,+\infty)$
-		- $a^2-4Ak< 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
+		- $a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
+		- $a^2-4Ak< 0$, this time it has no solutions but the parable is below $0$, and thus we have no solutions.
 - Case $A=0 \land B,C\neq0$:
 
 	We can follow the same steps as before, ending up with the inequality $ax+k>0$. Here we have two cases:
