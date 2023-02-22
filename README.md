@@ -1,4 +1,5 @@
 
+
 # Triple Integral calculator
 
 ##  Table of Contents
@@ -67,6 +68,14 @@ From now on it's gonna be assumed that $A<0$.
 	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k < 0$. This is a simple second order equation with solutions(remembering that $A>0$):
 	- if discriminant$=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 	- if discriminant$=a^2-4Ak < 0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
+- Case $B<0 \land C=0$ o $B=0 \land C<0$:
+
+	Let's say it's $C=0$. We have that the contribute $cz$ spans onto $(-\infty,+\infty)$. This means that for whatever $x$, chosen the "big" enough $cz$ the inequality holds. So any $x$ is acceptable.
+	On the other hand, if it's also $c=0$, the case reduces to the previous one, but with $k\equiv-r-\frac{b^2}{4B}$.
+- Case $B,C=0$:
+
+	This case rely again on the lower terms. If either $b\neq0$ or $c\neq0$ we have that any $x$ allow a choice of $\tilde{y},\tilde{z}$ that satisfy the inequality.
+	If they are $b,c=0$ we have instead $Ax^2+ax+r>0$. This restricts the allowed values to $x\in(\frac{-a-\sqrt{a^2-4Ar}}{2A},\frac{-a+\sqrt{a^2-4Ar}}{2A})$, remembering that $A<0$ by assumption. This is correct only if well defined, so only if $a^2-4Ar>0$(if $=0$ we have a point, that by reducing the dimension of the domain, makes the integral $0$).
 
 Let's now proceed with the assumption $A=0$ (and by also restoring the initial values of the coefficients).
 - Case $B>0 \lor C>0$:
@@ -82,7 +91,7 @@ Let's now proceed with the assumption $A=0$ (and by also restoring the initial v
 	- $a<0$, the same reasoning works, except that this time when dividing by $a$ we have to switch inequality, getting $x<-\frac{k}{a}$.
 
 	A last case must be mentioned, where $a=0$. Under these conditions we have $By^2+by+Cz^2+cz+r>0$, which is either always true for each $x$ if there exists some $\tilde{y},\tilde{z}$ for which it holds, or always false independently from $x$. This check can be done once again with some intuition, seeing that since $B,C<0$ this is an ellipse, which with $B\equiv -B$ and $C\equiv -C$ can be rewritten as $r>By^2-by+Cz^2-cz$. By squaring we get $r>(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C}$.
-	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2 < k$. If $k\geq0$ there exists at least one point that is in the ellipse.
+	We define $k\equiv r+\frac{b^2}{4B}+\frac{c^2}{4C}$, and get $(\sqrt{B}y-\frac{b}{2\sqrt{B}})^2+(\sqrt{C}y-\frac{c}{2\sqrt{C}})^2 < k$. If $k < 0$ there exists at least one point that is in the ellipse.
 - Case $B=0 \lor C=0$:
 
 	If either one of the two is $0$, let's say $C=0$, it remains the contribute of $cz$, which spans on $(-\infty,+\infty)$. So as long as $c\neq0$ every $x$ is a solution.
