@@ -45,7 +45,7 @@ At this point the aim of the program is to just approximate the value of $m_4(S_
 
 It must be also mentioned that the domain can be unbounded, in this case an estimate of the improper integral is given.
 ## Numerical Solution
-The method used to solve the problem relies on romberg integration method. 
+The method used to solve the problem relies on Romberg integration method. 
 ### Domain
 But let's begin by looking at the domain of integration.
 Given that the domain is the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. What we do is find the maximum and minimum value assumed by $x,y$ and $z$. After finding each max and min value we look for common intervals. This way we get a rectangular set that contains the domain $D$.
@@ -68,7 +68,7 @@ From now on it's gonna be assumed that $A<0$.
 	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k < 0$. This is a simple second order equation with solutions(remembering that $A>0$):
 	- if discriminant$=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
 	- if discriminant$=a^2-4Ak < 0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
-- Case $B<0 \land C=0$ o $B=0 \land C<0$:
+- Case $B<0 \land C=0$ or $B=0 \land C<0$:
 
 	Let's say it's $C=0$. We have that the contribute $cz$ spans onto $(-\infty,+\infty)$. This means that for whatever $x$, chosen the "big" enough $cz$ the inequality holds. So any $x$ is acceptable.
 	On the other hand, if it's also $c=0$, the case reduces to the previous one, but with $k\equiv-r-\frac{b^2}{4B}$.
@@ -113,9 +113,23 @@ This is thus how we proceed in filling the table of approximations.
 ![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
 
 To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i,j-1}|$.
+### Extensions of the Solution
+What's been presented is the basic approach. The problem is that it has two fundamental problematic. The first regards improper integrals. We in fact have that if the domain is unbounded, which it can be, we end up splitting in halves numbers of the order of $10^{308}$. This is obviously a really bad approach. Instead what the code does is splitting the domain into partially bounded sections. In particular it keeps a region of side length MAX_BOUNDED_SIZE, centered on the coordinates that are bounded.
+![domain splitting](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/domainSplit.png)
+The region inside is computed as described above. Instead, the partially unbounded regions undergo a change of coordinates, in order to transform the domain into a bounded one.
+The transformation is $u=\frac{e^x}{1+e^x}$, or for computational purposes $u=1-\frac{1}{1+e^x}$. The differential changes accordingly, becoming $du=\frac{(1+e^x)^2}{e^x}dx$. Again this more convenient mathematical form is not well suited for numerical calculations, so we can see that for small $x$s(already from $x>10$) we have that in the numerator the term $e^{2x}$ dominate. For this reason we use the approximation $\frac{(1+e^x)^2}{e^x}\approx\frac{e^{2x}}{e^x}=e^x$(for $x>10$).
 
+Another problematic that arose is that by being in $3$ dimensions, the number of points for each trapezoidal rule grows as a cube. This is really bad if the size of the domain is large enough, since small steps require huge computational amount of time. For this reason is wise to require a good precision only where is needed. This is the idea on which adaptive quadrature works on.
+The technique is quite straightforward:
+- The integral with it's error is computed
+- If the error is below the allowed tolerance the result is found
+- If the error is above the allowed tolerance the domain is split into subdomains, and the integration is repeated on every subdomain.
 
-
+This approach has two benefits. The first is that by splitting the domain the growth of the number of points is no longer cube. The second is that doing this way, all the regions that behave "well" requires "less" computation, since the integral converge faster. And on the other hand, the computation is concentrated on those regions that are hard to approximate.
+Of course this technique has also slight disadvantages, one of which is that the Romberg's algorithm loses relevance. In fact we trade the precision given by the Richardson's extrapolation that requires a huge number of points, to the sum of the contributes of different regions, that are instead calculated with less steps of the Romberg's algorithm.
+A final note is on how the domain is split.
+![inner domain split](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/innerDomainSplit.png)
+Being in 3 dimensions, what's been done is splitting the domain in the 3D-equivalent of bisecting a line. In this way every split creates $2^3=8$ separate subdomains.
 
 
 # Synchronization
