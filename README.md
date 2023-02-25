@@ -18,7 +18,6 @@ Triple Integral calculator
 │
 ├── bin // executable 
 │ └── integral3D
-├── doc // documentation 
 ├── include // headers (.h)
 │ ├── error.h
 │ ├── linker.h
