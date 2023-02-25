@@ -131,7 +131,7 @@ I'm gonna assume that if the inequality is either $<$ or $\leq$, the signs of th
 
 - Case $A>0$:
 
-	This case is trivial. Given big enough $x$ the inequality holds. Of course there may be intervals in between for which it doesn't hold, but since we want the max and min we immediately know them to be min$=-\infty$ and max$=+\infty$.
+	This case is trivial. Given big enough $x$ the inequality holds. Of course there may be intervals in between for which it doesn't hold, but since we want the max and min we immediately know them to be min $=-\infty$ and max $=+\infty$.
 
 From now on it's gonna be assumed that $A<0$.
 - Case $B>0 \lor C>0$:
