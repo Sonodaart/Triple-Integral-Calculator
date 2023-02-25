@@ -109,7 +109,7 @@ EXPORT_SYMBOL std::map<std::string,double> first = {
 
 EXPORT_SYMBOL std::map<std::string,double> second = first;
 ```
-To be noted how it's important to remove eventual points that doesn't belong to the actual domain as $(0,0,0)$ for this function.
+To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
 # Underlying theory
 ## Mathematical Formulation of the Problem
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
@@ -143,8 +143,8 @@ From now on it's gonna be assumed that $A<0$.
 	We proceed to write $r>-Ax^2-ax-By^2-by-Cz^2-cz$. With this, since we know that $A,B,C<0$ we can change notation once a gain absorbing the signs into the coefficients getting $A\equiv-A,a\equiv-a,...$.
 	We end up with $Ax^2+ax+By^2+by+Cz^2+cz < r$. We now complete the squares getting $Ax^2+ax+(\sqrt{B}y+\frac{b}{2\sqrt{B}})^2-\frac{b^2}{4B}+(\sqrt{C}y+\frac{c}{2\sqrt{C}})^2-\frac{c^2}{4C} < r$. Since $B,C>0$ the squares of $y$ and $z$ gives values from $0$ to $+\infty$. Since we want the max range of values for $x$ we minor those terms with $0$, getting $Ax^2+ax-\frac{b^2}{4B}-\frac{c^2}{4C} < r$.
 	By calling $k\equiv -r-\frac{b^2}{4B}-\frac{c^2}{4C}$, we can rewrite it as $Ax^2+ax+k < 0$. This is a simple second order equation with solutions(remembering that $A>0$):
-	- if discriminant$=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
-	- if discriminant$=a^2-4Ak < 0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
+	- if discriminant $=a^2-4Ak\geq 0 \Rightarrow x \in (\frac{-a-\sqrt{a^2-4Ak}}{2A},\frac{-a+\sqrt{a^2-4Ak}}{2A})$
+	- if discriminant $=a^2-4Ak < 0$ the parable is always above $0$, and thus has no solutions. This second case is the equivalent of having negative radius, where we see that it has no volume at all.
 - Case $B<0 \land C=0$ or $B=0 \land C<0$:
 
 	Let's say it's $C=0$. We have that the contribute $cz$ spans onto $(-\infty,+\infty)$. This means that for whatever $x$, chosen the "big" enough $cz$ the inequality holds. So any $x$ is acceptable.
