@@ -6,6 +6,9 @@
 
 - [File Management](#file-management)
 - [Usage](#table-of-contents)
+	- [Compilation](#compilation)
+	- [Execution](#execution)
+	- [Advanced usages](#advanced-usages)
 - [Underlying theory](#underlying-theory)
 	- [Mathematical Formulation of the Problem](#mathematical-formulation-of-the-problem)
 	- [Numerical Solution](#numerical-solution)
@@ -14,7 +17,7 @@ Triple Integral calculator
 ```
 │
 ├── bin // executable 
-│ └── main
+│ └── integral3D
 ├── doc // documentation 
 ├── include // headers (.h)
 │ ├── error.h
@@ -32,7 +35,81 @@ Triple Integral calculator
 └── README.md
 ```
 # Usage
+### Compilation
+To compile the program go in the root of the folder and execute:
+```
+make
+```
+In addition it's require to have a shared library to be dynamically linked. To create it write C or C++ file, structured in the following way:
+```c++
+#ifdef __cplusplus
+#define EXPORT_SYMBOL extern "C" __attribute__((visibility("default")))
+#else
+#define EXPORT_SYMBOL __attribute__((visibility("default")))
+#endif
+#include <map>
 
+EXPORT_SYMBOL double f(double x, double y, double z) {
+	return 5*x+y;
+}
+
+EXPORT_SYMBOL std::map<std::string,double> first = {
+	{"x^2",1},
+	{"y^2",2},
+	{"z^2",1},
+	{"r",-10},
+	{"<",1}
+};
+
+EXPORT_SYMBOL std::map<std::string,double> second = {
+	{"y",1},
+	{">",1}
+};
+```
+The above code is just an example, more complex code can be written.
+To work it's mandatory that the file possesses a function named "f", with same prototype as the one presented in the example, and two maps, one called first and one called second.
+The maps are supposed to contain the keys: $x^2, x, y^2, y, z^2, z, r$, and for the inequality $>,<,>=,<=$. The former are the coefficients of the respective terms, while the latter are the inequality, and for those the value assigned is not important. The inequality should correspond to the form $Ax^2+ax+By^2+by+Cz^2+cz+r \gtreqless 0$.
+To compile the shared library execute the command:
+```bash
+g++ -shared -fPIC file_name.cpp -o file_name.so
+```
+### Execution
+The program requires 1 mandatory input, and 3 optional parameters.
+The first parameter is the location of the shared library(.so) to be dynamically linked. The second parameter is the tolerance error desired. The third and fourth parameters are the maximum n for the Romberg's algorithm, and the maximum recursion depth for the adaptive integration. A call will look like this:
+```bash
+PATH_TO_EXECUTABLE/integral3D function.so 0.1 3 3
+```
+For more extensive use it's advised to add it to the PATH with:
+```bash
+export PATH="PATH_TO_PROJECT/bin/:$PATH"
+```
+If done in the .bashrc it will be available in new instances of the shell.
+### Advanced usages
+Having the possibility to write actual C or C++ code for the function, extensive use of the ```<cmath>``` library and others can be done.
+In addition, it's possible to personalize the domain of integration even further via the use of conditionals.
+For instance if it's desired to integrate over a cube of side 1, it's possible to hard code it into the function. For the domain it's used a sensible approximation of the domain(one that contains the wanted domain, but isn't excessively large, since it affects both performances as precision):
+```c++
+EXPORT_SYMBOL double f(double x, double y, double z) {
+	if(x==0 and y==0 and z==0){
+		return 0;
+	}
+	if(-0.5<x<0.5 and -0.5<y<0.5 and -0.5<z<0.5){
+		return 1/( pow(x,2)+pow(y,2)+pow(z,2) );
+	}
+	return 0;
+}
+
+EXPORT_SYMBOL std::map<std::string,double> first = {
+	{"x^2",1},
+	{"y^2",1},
+	{"z^2",1},
+	{"r",-1},
+	{"<",1}
+};
+
+EXPORT_SYMBOL std::map<std::string,double> second = first;
+```
+To be noted how it's important to remove eventual points that doesn't belong to the actual domain as $(0,0,0)$ for this function.
 # Underlying theory
 ## Mathematical Formulation of the Problem
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
@@ -110,6 +187,7 @@ with $h$ the step-size. The reason why the upper limit of the sum is $2^{i}-1$ i
 
 At this point to get the next values in each row we take advantage of Richardson's Extrapolation. This formula cancels the error contributes, making each step more precise. In particular the error of $R_{i,j}$ is of $O(h^{2j})$. The way we cancel the contributes is given by the following relation $R_{i,j}=\frac{4^{j-1}R{i,j-1}-R_{i-1,j-1}}{4^{j-1}-1}$.
 This is thus how we proceed in filling the table of approximations.
+
 ![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
 
 To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i,j-1}|$.
@@ -130,16 +208,4 @@ Of course this technique has also slight disadvantages, one of which is that the
 A final note is on how the domain is split.
 ![inner domain split](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/innerDomainSplit.png)
 Being in 3 dimensions, what's been done is splitting the domain in the 3D-equivalent of bisecting a line. In this way every split creates $2^3=8$ separate subdomains.
-
-
-# Synchronization
-
-Synchronization is one of the biggest features of StackEdit. It enables you to synchronize any file in your workspace with other files stored in your **Google Drive**, your **Dropbox** and your **GitHub** accounts. This 
-
-- The workspace synchronization will sync all your files, folders and settings automatically. This will allow you to fetch your workspace on any other device.
-	> To start syncing your workspace, just sign in with Google in the menu.
-
-- The file synchronization will keep one file of the workspace synced with one or multiple files in **Google Drive**, **Dropbox** or **GitHub**.
-	> Before starting to sync files, you must link an account in the **Synchronize** sub-menu.
-
 
