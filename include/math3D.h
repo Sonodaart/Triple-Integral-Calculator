@@ -1,4 +1,5 @@
-// Library to define operations of 3D objects such as: inequalities, functions(R^3->R)
+// Library to define operations of 3D objects such as: inequalities, functions(R^3->R),
+// integration of such functions, points in 3D, parallelepipeds in 3D.
 
 #ifndef _MATH3D_LIB
 #define _MATH3D_LIB
@@ -9,6 +10,19 @@
 #include <string>
 #include <limits>
 #include <cmath>
+
+// values for optional parameters:
+#define DEFAULT_ERROR 0.1
+#define DEFAULT_MAXN 5
+#define DEFAULT_MAXR 2
+// ZERO_STATE is for those variables that by being
+// not passed, the state 0 is implied
+#define ZERO_STATE 0
+
+
+#define DEFAULT_INEQUALITY ">"
+#define COORDINATE_INFINITY std::numeric_limits<double>::max()/2
+#define MAX_BOUNDED_SIZE 1000
 
 #include "../include/error.h"
 
@@ -157,27 +171,32 @@ class Integral3D{
 		~Integral3D();
 
 		// evaluate integral of Function3D passed
-		double operator()(const Function3D&, const double&, double&, const int& = 3, const int& = 3);
+		double operator()(const Function3D&, double&, double = DEFAULT_ERROR, int = DEFAULT_MAXN,
+							int = DEFAULT_MAXR);
 
 	private:
 		// private functions to perform math operations
 
 		// functions related to the evaluation of the integral
 		double improperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
-										double&, const int&, const int&, const int& = 0, const int& = 0,
-										const int& = 0, const int& = 0);
+										double&, const int&, const int&, const int& = ZERO_STATE,
+										const int& = ZERO_STATE, const int& = ZERO_STATE,
+										const int& = ZERO_STATE);
 		double evaluateImproperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
-												double&, const int&, const int&, const int&, const int&, const int&);
+												double&, const int&, const int&, const int&,
+												const int&, const int&);
 		double rombergIntegral(const Function3D&, const Parallelepiped&, const double&, double&, const int&,
-								const int&, const int& = 0) const;
+								const int&, const int& = ZERO_STATE) const;
 		double directionedTrapezoidIntegral(const Function3D&, const Parallelepiped&, const int&,
-												const int& = 0, const double& = 0, const double& = 0) const;
+												const int& = ZERO_STATE, const double& = ZERO_STATE,
+												const double& = ZERO_STATE) const;
 
 		// functions related to the change of variable
 		double standardChangeOfVariableFunction(const double&) const;
-		double standardInverseChangeOfVariableFunction(const double&) const;
+		double standardInverseChangeOfVariableFunction(const double&, const std::string&) const;
 		double changeVariable(const double&, const double&) const;
-		void setChangeOfVariable(const double& = 0, const double& = 0, const double& = 0);
+		void setChangeOfVariable(const double& = ZERO_STATE, const double& = ZERO_STATE,
+									const double& = ZERO_STATE);
 		double changeOfVariableDifferential(const double&, const double&, const double&) const;
 
 		// functions related to the domain management

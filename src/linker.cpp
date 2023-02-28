@@ -34,7 +34,7 @@ DynamicFunction::DynamicFunction(const std::string &fileName, const int &loadFun
 // destructor that deallocate the loaded library
 DynamicFunction::~DynamicFunction(){
 	if(closeLibrary()){
-		std::cerr << WARNING_LOG << " failed closing the shared library." << std::endl;
+		std::cerr << WARNING_LOG << "failed closing the shared library." << std::endl;
 	}
 }
 
@@ -47,7 +47,7 @@ int DynamicFunction::closeLibrary(){
 		return 0;
 	}
 	if (dlclose(handle) != 0){
-		std::cerr << ERROR_LOG << " an unexpected error has occurred while closing the handle: "
+		std::cerr << ERROR_LOG << "an unexpected error has occurred while closing the handle: "
 					<< dlerror() << std::endl;
 		handle = nullptr;
 		setState(0);
@@ -63,7 +63,7 @@ int DynamicFunction::closeLibrary(){
 int DynamicFunction::loadLibrary(char fileName[]){
 	if(isLibraryLoaded()){
 		if(closeLibrary()){
-			std::cerr << WARNING_LOG << " failed closing the last library while opening new library."
+			std::cerr << WARNING_LOG << "failed closing the last library while opening new library."
 						<< std::endl;
 		}
 	}
@@ -71,7 +71,7 @@ int DynamicFunction::loadLibrary(char fileName[]){
 	// RTLD_LAZY means that unresolved symbols are not resolved until used
 	handle = dlopen(libraryName.c_str(), RTLD_LAZY);
 	if (!isLibraryLoaded()){
-		std::cerr << ERROR_LOG << " cannot open shared library: " << dlerror() << std::endl;
+		std::cerr << ERROR_LOG << "cannot open shared library: " << dlerror() << std::endl;
 		handle = nullptr;
 		return 1;
 	}
@@ -94,7 +94,7 @@ int DynamicFunction::isLibraryLoaded(){
 // order to create the Function3D object
 int DynamicFunction::loadLinkedFunction(){
 	if (!isLibraryLoaded()){
-		std::cerr << ERROR_LOG <<  " shared library is missing, or not properly initialised." << std::endl;
+		std::cerr << ERROR_LOG <<  "shared library is missing, or not properly initialised." << std::endl;
 		return 1;
 	}
 	// Load the symbol for the function and 2 maps
@@ -103,15 +103,15 @@ int DynamicFunction::loadLinkedFunction(){
 	std::map<std::string,double> *temp2 = (std::map<std::string,double>*) dlsym(handle, inequality2Name.c_str());
 	// check wether symbols have been properly resolved
 	if (!f){
-		std::cerr << ERROR_LOG << " cannot load symbol " << functionName << ": " << dlerror() << std::endl;
+		std::cerr << ERROR_LOG << "cannot load symbol " << functionName << ": " << dlerror() << std::endl;
 		return 1;
 	}
 	if(!temp1){
-		std::cerr << ERROR_LOG << " cannot load symbol " << inequality1Name << ": " << dlerror() << std::endl;
+		std::cerr << ERROR_LOG << "cannot load symbol " << inequality1Name << ": " << dlerror() << std::endl;
 		return 1;
 	}
 	if(!temp2){
-		std::cerr << ERROR_LOG << " cannot load symbol " << inequality2Name << ": " << dlerror() << std::endl;
+		std::cerr << ERROR_LOG << "cannot load symbol " << inequality2Name << ": " << dlerror() << std::endl;
 		return 1;
 	}
 	loadFunction3D(*temp1,*temp2,f);

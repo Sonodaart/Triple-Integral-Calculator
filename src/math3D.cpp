@@ -1,9 +1,5 @@
 #include "../include/math3d.h"
 
-#define DEFAULT_INEQUALITY ">"
-#define COORDINATE_INFINITY std::numeric_limits<double>::max()/2
-#define MAX_BOUNDED_SIZE 1000
-
 //===================== Inequality Class =====================//
 // constructor that only initialise disequality and isLoaded flag to default values
 Inequality::Inequality() : isLoaded(0), disequality(DEFAULT_INEQUALITY){
@@ -88,7 +84,7 @@ int Inequality::isCallable() const{
 // it's a true statement(1) or not(0).
 int Inequality::operator()(const double &x, const double &y, const double &z) const{
 	if(!isCallable()){
-		std::cerr << WARNING_LOG << " trying to call non initialised inequality." << std::endl;
+		std::cerr << WARNING_LOG << "trying to call non initialised inequality." << std::endl;
 		return -1;
 	}
 	double value = coefficient.at("x^2")*x*x+coefficient.at("x")*x+
@@ -115,7 +111,7 @@ const std::map<std::string,double>& Inequality::getCoefficient() const{
 // the coefficient of the x^2 term
 const double& Inequality::getCoefficient(const std::string &name) const{
 	if(coefficient.find(name) == coefficient.end()){
-		std::cerr << WARNING_LOG << " trying to retrieve non-existing coefficient in Inequality." << std::endl;
+		std::cerr << WARNING_LOG << "trying to retrieve non-existing coefficient in Inequality." << std::endl;
 	}
 	return coefficient.at(name);
 }
@@ -190,7 +186,7 @@ int Function3D::isCallable() const{
 // function that checks if a (x,y,z) point satisfy both inequalities, thus falling in the domain
 int Function3D::isInDomain(const double &x, const double &y, const double &z) const{
 	if(!first.isCallable() || !second.isCallable()){
-		std::cerr << WARNING_LOG << " trying to call function non initialised domain." << std::endl;
+		std::cerr << WARNING_LOG << "trying to call function non initialised domain." << std::endl;
 		return 0;
 	}
 	return first(x,y,z) && second(x,y,z);
@@ -199,7 +195,7 @@ int Function3D::isInDomain(const double &x, const double &y, const double &z) co
 // operator() that evaluates the Function3D on a given (x,y,z) point
 double Function3D::operator()(const double &x, const double &y, const double &z) const{
 	if(!isCallable()){
-		std::cerr << WARNING_LOG << " trying to call non initialised function." << std::endl;
+		std::cerr << WARNING_LOG << "trying to call non initialised function." << std::endl;
 		return std::numeric_limits<double>::quiet_NaN();
 	}
 	if(!isInDomain(x,y,z)){
@@ -221,7 +217,7 @@ const Inequality& Function3D::getInequality(const int &n) const{
 	}else if(n==2){
 		return second;
 	}else{
-		std::cerr << WARNING_LOG << " asking for non-existent inequality. First is returned." << std::endl;
+		std::cerr << WARNING_LOG << "asking for non-existent inequality. First is returned." << std::endl;
 		return first;
 	}
 }
@@ -276,8 +272,17 @@ Integral3D::Integral3D() : isXSubstituted(0), isYSubstituted(0), isZSubstituted(
 Integral3D::~Integral3D(){}
 
 // this function takes in input a function, a minimum tolerance "epsilon", a variable in which the final error
-// is stored in, and the max number of Romberg's step and recursions
-double Integral3D::operator()(const Function3D &function, const double &epsilon, double &finalError, const int &MAXN, const int &MAXR){
+// is stored in, and the max number of Romberg's step and recursions(if those are -1 default value is used)
+double Integral3D::operator()(const Function3D &function, double &finalError, double epsilon, int MAXN, int MAXR){
+	if(epsilon==-1){
+		epsilon = DEFAULT_ERROR;
+	}
+	if(MAXN==-1){
+		MAXN = DEFAULT_MAXN;
+	}
+	if(MAXR==-1){
+		MAXR = DEFAULT_MAXR;
+	}
 	Parallelepiped domain = rectanglifyDomain(function);
 	finalError = 0; // reset error
 	// if domain has at least one coordinate that doesn't have width, it's
@@ -348,7 +353,7 @@ double Integral3D::improperRombergIntegral(const Function3D &function, const Par
 				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,1,xSubstitution,0)+
 						improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,1,xSubstitution,-1);
 			}
-		}else if(domain.xwidth<MAX_BOUNDED_SIZE){
+		}else{
 			// if domain is "finite"(aka the width is below the maximum allowed)
 			return improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,1,0);
 		}
@@ -393,7 +398,7 @@ double Integral3D::improperRombergIntegral(const Function3D &function, const Par
 				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0)+
 						improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,2,xSubstitution,-1);
 			}
-		}else if(domain.ywidth<MAX_BOUNDED_SIZE){
+		}else{
 			return improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0);
 		}
 	}else if(axis==2){
@@ -440,7 +445,7 @@ double Integral3D::improperRombergIntegral(const Function3D &function, const Par
 				return evaluateImproperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0)+
 						evaluateImproperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,-1);
 			}
-		}else if(domain.zwidth<MAX_BOUNDED_SIZE){
+		}else{
 			return evaluateImproperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0);
 		}
 	}
@@ -474,19 +479,20 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 	if(domain.xwidth==0 or domain.ywidth==0 or domain.zwidth==0){
 		return 0;
 	}
-
 	// Romberg's algorithm
 	double R[MAXN][MAXN]; // Romberg's table
 	double temp;
 	int i,j;
-	for(i=0;i<MAXN;++i){
-		R[i][0] = directionedTrapezoidIntegral(function, domain, pow(2,i+1)); // trapezoidal integral
+	R[0][0] = directionedTrapezoidIntegral(function, domain, 2); // trapezoidal integral
+	for(i=1;i<MAXN;++i){
+		// trapezoidal integral using successing refinements
+		R[i][0] = R[i-1][0]/2+directionedTrapezoidIntegral(function, domain, pow(2,i+1));
 		for(j=1;j<=i;++j){
 			temp = pow(4,j);
 			R[i][j] = ( temp*R[i][j-1]-R[i-1][j-1] )/( temp-1 ); // Richardson's extrapolation
 		}
 		// checking for early stop if error tolerance is met
-		if(std::fabs(R[i-1][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0){
+		if(std::fabs(R[i-1][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0 and R[i-1][i-1]!=0){
 			finalError += std::fabs(R[i-1][i-1]-R[i][i]); 
 			return R[i][i];
 		}
@@ -512,7 +518,7 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 }
 
 // This function compute the trapezoidal rule on the given domain, considering
-// n points (edged included). Being in 3 dimension the extended form is used.
+// the refinement at n points. Being in 3 dimension an extended 3D form is used.
 // Standard trapezoidal rule is applied on "x" axis, but for every point it's applied the
 // trapezoidal rule over the "y" axis, and for every point of the "y" axis it's applied the
 // trapezoidal rule over the "z" axis, over which a standard trapezoidal rule is used.
@@ -525,31 +531,47 @@ double Integral3D::directionedTrapezoidIntegral(const Function3D &function, cons
 													const double &fixedY) const{
 	int i;
 	double h,sum;
+	sum = 0;
 	if(axis == 0){
-		h = domain.xwidth/n; // step over x
+		h = domain.xwidth/(n-1); // step over x
 		// extremes of the domain evaluation
 		sum = 0.5*(directionedTrapezoidIntegral(function,domain,n,1,domain.vertex.x)+
 					directionedTrapezoidIntegral(function,domain,n,1,domain.vertex.x+domain.xwidth));
 	}else if(axis == 1){
-		h = domain.ywidth/n; // step over y
+		h = domain.ywidth/(n-1); // step over y
 		// extremes of the domain evaluation
 		sum = 0.5*(directionedTrapezoidIntegral(function,domain,n,2,fixedX,domain.vertex.y)+
 					directionedTrapezoidIntegral(function,domain,n,2,fixedX,domain.vertex.y+domain.ywidth));
 	}else if(axis == 2){
-		h = domain.zwidth/n; // step over z
-		// extremes of the domain evaluation
-		sum = 0.5*(function(fixedX,fixedY,domain.vertex.z)+function(fixedX,fixedY,domain.vertex.z+domain.zwidth));
+		h = domain.zwidth/(n-1); // step over z
+		// extremes of the domain evaluation(only during first refinement)
+		if(n==2){
+			sum = 0.5*(function(standardInverseChangeOfVariableFunction(fixedX,"x"),
+								standardInverseChangeOfVariableFunction(fixedY,"y"),
+								standardInverseChangeOfVariableFunction(domain.vertex.z,"z"))
+						+function(standardInverseChangeOfVariableFunction(fixedX,"x"),
+									standardInverseChangeOfVariableFunction(fixedY,"y"),
+									standardInverseChangeOfVariableFunction(domain.vertex.z+domain.zwidth,"z")));
+		}
 	}
 	
 	// inside points are evaluated
-	for(i=1;i<n;++i){
+	for(i=1;i<n-1;){
 		if(axis == 0){
 			sum += directionedTrapezoidIntegral(function,domain,n,1,domain.vertex.x+i*h);
+			++i;
 		}else if(axis == 1){
 			sum += directionedTrapezoidIntegral(function,domain,n,2,fixedX,domain.vertex.y+i*h);
+			++i;
 		}else if(axis == 2){
-			sum += function(fixedX,fixedY,domain.vertex.z+i*h)*changeOfVariableDifferential(fixedX,fixedY,domain.vertex.z+i*h);
-		}	
+			sum += function(standardInverseChangeOfVariableFunction(fixedX,"x"),
+							standardInverseChangeOfVariableFunction(fixedY,"y"),
+							standardInverseChangeOfVariableFunction(domain.vertex.z+i*h,"z"))*
+					changeOfVariableDifferential(fixedX,fixedY,domain.vertex.z+i*h);
+			// if iterating over z axis the step is 2, since by halving the step
+			// we have alternating "seen" points and new points
+			i += 2;
+		}
 	}
 
 	return h*sum;
@@ -564,9 +586,15 @@ double Integral3D::standardChangeOfVariableFunction(const double &value) const{
 }
 
 // this is the inverse change of variable function used for the improper integrals
-double Integral3D::standardInverseChangeOfVariableFunction(const double &value) const{
-	// e^x/(1+e^x) = 1-1/(1+e^x)
-	return -log(-1+1/value);
+double Integral3D::standardInverseChangeOfVariableFunction(const double &value,
+															const std::string &coordinate) const{
+	if((isXSubstituted!=0 and coordinate=="x")
+		or (isYSubstituted!=0 and coordinate=="y")
+		or (isZSubstituted!=0 and coordinate=="z")){
+		// e^x/(1+e^x) = 1-1/(1+e^x)
+		return -log(-1+1/value);
+	}
+	return value;
 }
 
 // function that takes in input the variables x,y or z, and returns the changed
@@ -606,7 +634,7 @@ double Integral3D::changeOfVariableDifferential(const double &u, const double &v
 		// since the input is already transformed, and since the
 		// differential is expressed in terms of x, the inverse
 		// function is called
-		double x = standardInverseChangeOfVariableFunction(u);
+		double x = standardInverseChangeOfVariableFunction(u,"x");
 		if(x<10){
 			// standard differential contribution
 			r *= pow(1+pow(M_E,x),2)/pow(M_E,x);
@@ -620,7 +648,7 @@ double Integral3D::changeOfVariableDifferential(const double &u, const double &v
 		if(v==1 or v==0){
 			return 0;
 		}
-		double y = standardInverseChangeOfVariableFunction(v);
+		double y = standardInverseChangeOfVariableFunction(v,"y");
 		if(y<10){
 			r *= pow(1+pow(M_E,y),2)/pow(M_E,y);
 		}else{
@@ -631,7 +659,7 @@ double Integral3D::changeOfVariableDifferential(const double &u, const double &v
 		if(w==1 or w==0){
 			return 0;
 		}
-		double z = standardInverseChangeOfVariableFunction(w);
+		double z = standardInverseChangeOfVariableFunction(w,"z");
 		if(z<10){
 			r *= pow(1+pow(M_E,z),2)/pow(M_E,z);
 		}else{
