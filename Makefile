@@ -1,3 +1,11 @@
+# Makefile of integral3D program.
+# The functionalities are:
+# - "all"->compiles everything needed and create the executable
+# - "test1"->compiles and execute the test function in test/function.cpp
+# - "$(EXECUTABLE)"->compiles the executable
+# - "$(LIB_DIR)/%.o"->create the object file of the required file
+# - "clean"->removes all object files and the executable
+
 CC = g++
 CFLAGS = -c -Wall
 LDFLAGS = -ldl
@@ -14,16 +22,12 @@ EXECUTABLE = $(BIN_DIR)/integral3D
 
 all: $(SOURCES) $(EXECUTABLE)
 
-# to be eliminated
-test1: all
+test: all
 	g++ -shared -fPIC test/function.cpp -o test/function.so
-	./bin/integral3D test/function.so
+	./bin/integral3D test/function.so 0.1 3 3
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
-
-# $(LIB_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE_DIR)/%.h $(INCLUDE_DIR)/error.h
-# 	$(CC) $(CFLAGS) $< -o $@
 
 $(LIB_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS)
 	$(CC) $(CFLAGS) $< -o $@
