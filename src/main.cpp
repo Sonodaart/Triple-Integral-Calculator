@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 	}
 	if(argc == 2){
 		std::cerr << CONSOLE_LOG << "using default parameters: error: " <<  DEFAULT_ERROR
-					<< "MAXN=" << DEFAULT_MAXN << ", MAXR=" << DEFAULT_MAXR << std::endl;
+					<< ", MAXN=" << DEFAULT_MAXN << ", MAXR=" << DEFAULT_MAXR << std::endl;
 	}else if(argc == 3){
 		loadError(argv[2],error);
 		std::cerr << CONSOLE_LOG << "using default parameters: MAXN=" << DEFAULT_MAXN

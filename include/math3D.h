@@ -15,14 +15,16 @@
 #define DEFAULT_ERROR 0.1
 #define DEFAULT_MAXN 5
 #define DEFAULT_MAXR 2
+#define LIMITED_INTEGRATION_FLAG_BASE_STATE 0
+#define LIMITED_INTEGRATION_FLAG_TRIGGERED_STATE 1
 // ZERO_STATE is for those variables that by being
 // not passed, the state 0 is implied
 #define ZERO_STATE 0
 
 
 #define DEFAULT_INEQUALITY ">"
-#define COORDINATE_INFINITY std::numeric_limits<double>::max()/2
-#define MAX_BOUNDED_SIZE 1000
+#define COORDINATE_INFINITY 100000
+#define MAX_BOUNDED_SIZE 10
 
 #include "../include/error.h"
 
@@ -180,13 +182,12 @@ class Integral3D{
 		// functions related to the evaluation of the integral
 		double improperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
 										double&, const int&, const int&, const int& = ZERO_STATE,
-										const int& = ZERO_STATE, const int& = ZERO_STATE,
-										const int& = ZERO_STATE);
+										const int& = ZERO_STATE, const int& = ZERO_STATE);
 		double evaluateImproperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
 												double&, const int&, const int&, const int&,
 												const int&, const int&);
 		double rombergIntegral(const Function3D&, const Parallelepiped&, const double&, double&, const int&,
-								const int&, const int& = ZERO_STATE) const;
+								const int&, const int& = ZERO_STATE);
 		double directionedTrapezoidIntegral(const Function3D&, const Parallelepiped&, const int&,
 												const int& = ZERO_STATE, const double& = ZERO_STATE,
 												const double& = ZERO_STATE) const;
@@ -195,21 +196,22 @@ class Integral3D{
 		double standardChangeOfVariableFunction(const double&) const;
 		double standardInverseChangeOfVariableFunction(const double&, const std::string&) const;
 		double changeVariable(const double&, const double&) const;
-		void setChangeOfVariable(const double& = ZERO_STATE, const double& = ZERO_STATE,
-									const double& = ZERO_STATE);
+		void setChangeOfVariable(const int& = ZERO_STATE, const int& = ZERO_STATE,
+									const int& = ZERO_STATE);
 		double changeOfVariableDifferential(const double&, const double&, const double&) const;
 
 		// functions related to the domain management
 		Parallelepiped rectanglifyDomain(const Function3D&) const;
 		void applyInequality(const Inequality&, double&, double&, double&, double&, double&, double&) const;
 		void getRange(const Inequality&, const std::string&, double&, double&) const;
-		void changeDomainOfIntegration(Parallelepiped&, const double&, const double&, const double&) const;
+		int changeDomainOfIntegration(Parallelepiped&, const double&, const double&, const double&) const;
 		void splitDomain(const Parallelepiped&, std::vector<Parallelepiped>&) const;
 
 
-		double isXSubstituted;
-		double isYSubstituted;
-		double isZSubstituted;
+		int isXSubstituted;
+		int isYSubstituted;
+		int isZSubstituted;
+		int approximationFlag;
 };
 
 #endif // end of library guardian
