@@ -1,5 +1,6 @@
 
 
+
 # Triple Integral calculator
 
 ##  Table of Contents
@@ -191,12 +192,7 @@ This is thus how we proceed in filling the table of approximations.
 
 To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i,j-1}|$.
 ### Extensions of the Solution
-What's been presented is the basic approach. The problem is that it has two fundamental problematic. The first regards improper integrals. We in fact have that if the domain is unbounded, which it can be, we end up splitting in halves numbers of the order of $10^{308}$. This is obviously a really bad approach. Instead what the code does is splitting the domain into partially bounded sections. In particular it keeps a region of side length MAX_BOUNDED_SIZE, centered on the coordinates that are bounded.
-![domain splitting](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/domainSplit.png)
-The region inside is computed as described above. Instead, the partially unbounded regions undergo a change of coordinates, in order to transform the domain into a bounded one.
-The transformation is $u=\frac{e^x}{1+e^x}$, or for computational purposes $u=1-\frac{1}{1+e^x}$. The differential changes accordingly, becoming $du=\frac{(1+e^x)^2}{e^x}dx$. Again this more convenient mathematical form is not well suited for numerical calculations, so we can see that for small $x$s(already from $x>10$) we have that in the numerator the term $e^{2x}$ dominate. For this reason we use the approximation $\frac{(1+e^x)^2}{e^x}\approx\frac{e^{2x}}{e^x}=e^x$(for $x>10$).
-
-Another problematic that arose is that by being in $3$ dimensions, the number of points for each trapezoidal rule grows as a cube. This is really bad if the size of the domain is large enough, since small steps require huge computational amount of time. For this reason is wise to require a good precision only where is needed. This is the idea on which adaptive quadrature works on.
+What's been presented is the basic approach. A problematic that arose is that by being in $3$ dimensions, the number of points for each trapezoidal rule grows as a cube. This is really bad if the size of the domain is large enough, since small steps require huge computational amount of time. For this reason is wise to require a good precision only where is needed. This is the idea on which adaptive quadrature works on.
 The technique is quite straightforward:
 - The integral with it's error is computed
 - If the error is below the allowed tolerance the result is found
