@@ -15,8 +15,8 @@
 #define DEFAULT_ERROR 0.1
 #define DEFAULT_MAXN 5
 #define DEFAULT_MAXR 2
-#define LIMITED_INTEGRATION_FLAG_BASE_STATE 0
-#define LIMITED_INTEGRATION_FLAG_TRIGGERED_STATE 1
+#define ERROR_INTEGRATION_FLAG_BASE_STATE 0
+#define ERROR_INTEGRATION_FLAG_TRIGGERED_STATE 1
 // ZERO_STATE is for those variables that by being
 // not passed, the state 0 is implied
 #define ZERO_STATE 0
@@ -192,14 +192,6 @@ class Integral3D{
 												const int& = ZERO_STATE, const double& = ZERO_STATE,
 												const double& = ZERO_STATE) const;
 
-		// functions related to the change of variable
-		double standardChangeOfVariableFunction(const double&) const;
-		double standardInverseChangeOfVariableFunction(const double&, const std::string&) const;
-		double changeVariable(const double&, const double&) const;
-		void setChangeOfVariable(const int& = ZERO_STATE, const int& = ZERO_STATE,
-									const int& = ZERO_STATE);
-		double changeOfVariableDifferential(const double&, const double&, const double&) const;
-
 		// functions related to the domain management
 		Parallelepiped rectanglifyDomain(const Function3D&) const;
 		void applyInequality(const Inequality&, double&, double&, double&, double&, double&, double&) const;
@@ -207,10 +199,6 @@ class Integral3D{
 		int changeDomainOfIntegration(Parallelepiped&, const double&, const double&, const double&) const;
 		void splitDomain(const Parallelepiped&, std::vector<Parallelepiped>&) const;
 
-
-		int isXSubstituted;
-		int isYSubstituted;
-		int isZSubstituted;
 		int approximationFlag;
 };
 

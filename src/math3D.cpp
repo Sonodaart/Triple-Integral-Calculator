@@ -267,8 +267,7 @@ Parallelepiped::~Parallelepiped(){
 
 //===================== Parallelepiped Class =====================//
 // default constructor that set default values to variables
-Integral3D::Integral3D() : isXSubstituted(0), isYSubstituted(0), isZSubstituted(0),
-							approximationFlag(LIMITED_INTEGRATION_FLAG_BASE_STATE){}
+Integral3D::Integral3D() : approximationFlag(ERROR_INTEGRATION_FLAG_BASE_STATE){}
 
 // empty destructor
 Integral3D::~Integral3D(){}
@@ -294,9 +293,9 @@ double Integral3D::operator()(const Function3D &function, double &finalError, do
 	if(domain.xwidth==0 or domain.ywidth==0 or domain.zwidth==0){
 		return 0;
 	}
-	approximationFlag = LIMITED_INTEGRATION_FLAG_BASE_STATE;
+	approximationFlag = ERROR_INTEGRATION_FLAG_BASE_STATE;
 	double r = improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR);
-	if(approximationFlag == LIMITED_INTEGRATION_FLAG_TRIGGERED_STATE){
+	if(approximationFlag == ERROR_INTEGRATION_FLAG_TRIGGERED_STATE){
 		std::cerr << WARNING_LOG << "at least one recursion reached maximum depth."
 					<< " Error may be greater than the one required." << std::endl;
 	}
@@ -539,7 +538,7 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 	}
 
 	// if both MAXN and MAXR are reached the "best" value obtained is returned
-	approximationFlag = LIMITED_INTEGRATION_FLAG_TRIGGERED_STATE;
+	approximationFlag = ERROR_INTEGRATION_FLAG_TRIGGERED_STATE;
 	if(MAXN==1){
 		finalError += R[0][0];
 	}else{
