@@ -24,7 +24,7 @@ all: $(SOURCES) $(EXECUTABLE)
 
 test: all
 	g++ -shared -fPIC test/function.cpp -o test/function.so
-	./bin/integral3D test/function.so 0.1 3 3
+	./bin/integral3D test/function.so 0.1 5 3
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
