@@ -24,7 +24,7 @@
 
 #define DEFAULT_INEQUALITY ">"
 #define COORDINATE_INFINITY 100000
-#define MAX_BOUNDED_SIZE 1000
+#define MAX_BOUNDED_SIZE 10
 
 #include "../include/error.h"
 
@@ -162,8 +162,7 @@ class Parallelepiped{
 // Integral3D is an object that performs integrals. It takes in input a Function3D,
 // which posseses 2 inequalities. The class calculate the smaller rectangular domain that
 // contains such domain, and on that it performs the integral.
-// The class is capable of managing also ubounded domains. The technique on which it integrate
-// is the Romberg's algorithm, with adaptive integration.
+// The technique on which it integrate is the Romberg's algorithm, with adaptive integration.
 class Integral3D{
 	public:
 		// constructor
@@ -180,6 +179,12 @@ class Integral3D{
 		// private functions to perform math operations
 
 		// functions related to the evaluation of the integral
+		double improperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
+										double&, const int&, const int&, const int& = ZERO_STATE,
+										const int& = ZERO_STATE, const int& = ZERO_STATE);
+		double evaluateImproperRombergIntegral(const Function3D&, const Parallelepiped&, const double&,
+												double&, const int&, const int&, const int&,
+												const int&, const int&);
 		double rombergIntegral(const Function3D&, const Parallelepiped&, const double&, double&, const int&,
 								const int&, const int& = ZERO_STATE);
 		double directionedTrapezoidIntegral(const Function3D&, const Parallelepiped&, const int&,
@@ -189,9 +194,7 @@ class Integral3D{
 		// functions related to the domain management
 		Parallelepiped rectanglifyDomain(const Function3D&) const;
 		void applyInequality(const Inequality&, double&, double&, double&, double&, double&, double&) const;
-		void makeDomainFinite(double&, double&, double&, double&, double&, double&) const;
 		void getRange(const Inequality&, const std::string&, double&, double&) const;
-
 		void splitDomain(const Parallelepiped&, std::vector<Parallelepiped>&) const;
 
 		int approximationFlag;

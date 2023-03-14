@@ -48,7 +48,7 @@ class DynamicFunction : public Function3D{
 		// void loadFunction3D(const std::map<std::string,double>&,
 		// 					const std::map<std::string,double>&, const doubleFunction3D&);
 
-		// functions regarding evaluation of function
+		// functions regarding evaluation of function (from Function3D)
 		/* inherited functions are left commented */
 		// void setState(const int&);
 		// int isCallable() const;

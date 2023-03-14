@@ -10,5 +10,10 @@
 #include "../include/linker.h"
 #include "../include/math3D.h"
 
-int isWellFormatted(const char *array);
+// function to check if a string is a double or integer
 int isDouble(const char *array);
+int isInteger(const char *array);
+
+// functions to load values into variables
+void loadDouble(const char*, double&, const std::string&);
+void loadInteger(const char*, int&, const std::string&);

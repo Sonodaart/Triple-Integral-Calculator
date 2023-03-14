@@ -1,6 +1,7 @@
 #include "../include/main.h"
 
-int isWellFormatted(const char *array){
+// function that check if the given input is an integer
+int isInteger(const char *array){
 	int i;
 	if(array[0]=='\0'){
 		return 0;
@@ -16,6 +17,7 @@ int isWellFormatted(const char *array){
 	return 1;
 }
 
+// function that checks if given input is a double
 int isDouble(const char *array){
 	int dot = 0;
 	int i;
@@ -32,33 +34,28 @@ int isDouble(const char *array){
 	return 1;
 }
 
-void loadError(const char *array, double &error){
+// function to load a double
+void loadDouble(const char *array, double &value, const std::string &variableName){
 	if(!isDouble(array)){
-		std::cerr << USAGE_LOG << "error should be a positive double." << std::endl;
+		std::cerr << USAGE_LOG << variableName << " error should be a positive double." << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
 	}
-	error = std::atof(array);
+	value = std::atof(array);
 }
 
-void loadMaxn(const char *array, int &maxn){
-	if(!isWellFormatted(array)){
-		std::cerr << USAGE_LOG << "MAXN should be an integer >=-1." << std::endl;
+// function to load integer into maxn value
+void loadInteger(const char *array, int &value, const std::string &variableName){
+	if(!isInteger(array)){
+		std::cerr << USAGE_LOG << variableName << "should be an integer >=-1." << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
 	}
-	maxn = std::atoi(array);
-}
-
-void loadMaxr(const char *array, int &maxr){
-	if(!isWellFormatted(array)){
-		std::cerr << USAGE_LOG << "MAXR should be an integer >=-1." << std::endl;
-		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
-	}
-	maxr = std::atoi(array);
+	value = std::atoi(array);
 }
 
 int main(int argc, char *argv[]) {
 	int maxn, maxr;
 	double error;
+	// setting parameters to default value
 	error = maxn = maxr = -1;
 	if(argc < 2){
 		std::cerr << USAGE_LOG << argv[0] << "<shared library name(*.so)>" << std::endl;
@@ -69,29 +66,31 @@ int main(int argc, char *argv[]) {
 		std::cerr << CONSOLE_LOG << "using default parameters: error: " <<  DEFAULT_ERROR
 					<< ", MAXN=" << DEFAULT_MAXN << ", MAXR=" << DEFAULT_MAXR << std::endl;
 	}else if(argc == 3){
-		loadError(argv[2],error);
+		loadDouble(argv[2],error,"error");
 		std::cerr << CONSOLE_LOG << "using default parameters: MAXN=" << DEFAULT_MAXN
 			<< ", MAXR=" << DEFAULT_MAXR << std::endl;
 	}else if(argc == 4){
-		loadError(argv[2],error);
-		loadMaxn(argv[3],maxn);
+		loadDouble(argv[2],error,"error");
+		loadInteger(argv[3],maxn,"MAXN");
 		std::cerr << CONSOLE_LOG << "using default parameters: MAXR=" << DEFAULT_MAXR << std::endl;
 	}else{
-		loadError(argv[2],error);
-		loadMaxn(argv[3],maxn);
-		loadMaxr(argv[4],maxr);
+		loadDouble(argv[2],error,"error");
+		loadInteger(argv[3],maxn,"MAXN");
+		loadInteger(argv[4],maxr,"MAXR");
 	}
 
-
+	// link dynamic library's function into DynamicFunction object
 	DynamicFunction dfunction(argv[1]);
+	// checking for eventual loading errors
 	if(!dfunction.isLibraryLoaded()){
 		std::cerr << ERROR_LOG << "failed to load shared library." << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
 	}
 
 	Integral3D integral;
-
 	double r,integralError;
+
+	// calculaing and displaying integral
 	r = integral(dfunction,integralError,error,maxn,maxr);
 	std::cout << "Result: " << r << " \u00B1 " << integralError << std::endl;
 	return 0;
