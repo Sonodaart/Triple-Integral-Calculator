@@ -77,7 +77,7 @@ g++ -shared -fPIC file_name.cpp -o file_name.so
 The program requires 1 mandatory input, and 3 optional parameters.
 The first parameter is the location of the shared library(.so) to be dynamically linked. The second parameter is the tolerance error desired. The third and fourth parameters are the maximum n for the Romberg's algorithm, and the maximum recursion depth for the adaptive integration. A call will look like this:
 ```bash
-PATH_TO_EXECUTABLE/integral3D function.so 0.1 3 3
+PATH_TO_EXECUTABLE/integral3D PATH_TO_SO/function.so 0.1 5 3
 ```
 For more extensive use it's advised to add it to the PATH with:
 ```bash
@@ -110,19 +110,19 @@ EXPORT_SYMBOL std::map<std::string,double> first = {
 EXPORT_SYMBOL std::map<std::string,double> second = first;
 ```
 To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
+It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral. This is because we introduce a discontinuity all around the custom domain, and the algorithm assume the function is continuous.
 # Underlying theory
 ## Mathematical Formulation of the Problem
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
-We have that the value of the integral is equal to the measure of the volume of the surface. In other words, given a function $f(x,y,z):D\subseteq \mathbb{R}^3 \rightarrow \mathbb{R}^3$, being $D$ a normal regular domain, we have.
+We have that the value of the integral is equal to the measure of the volume of the surface. In other words, given a function $f(x,y,z):D\subseteq \mathbb{R}^3 \rightarrow \mathbb{R}^3$, being $D$ a normal regular bounded domain, we have:
 $$\iiint_D f(x,y,z)dD = m_{4}(S_f)$$
 The function $f$ is provided from the user, and it's supposed that the function has an integral(this means it can also be $\pm\infty$).
 The domain $D$ is also given as input, in the form of the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. From this we can see that the border is given by the intersection of two $C^{\infty}(\mathbb{R}^3)$ functions, and thus is also normal and regular.
 
 At this point the aim of the program is to just approximate the value of $m_4(S_f)$(where by $m_4$ it's to be intended the 4D measure function).
 
-It must be also mentioned that the domain can be unbounded, in this case an estimate of the improper integral is given.
 ## Numerical Solution
-The method used to solve the problem relies on Romberg integration method. 
+The method used to solve the problem relies on Romberg's integration method. 
 ### Domain
 But let's begin by looking at the domain of integration.
 Given that the domain is the intersection of two inequalities of the form $Ax^2+ax+By^2+by+Cz^2+cz+r\gtreqless0$. What we do is find the maximum and minimum value assumed by $x,y$ and $z$. After finding each max and min value we look for common intervals. This way we get a rectangular set that contains the domain $D$.
@@ -185,13 +185,13 @@ We compute a regular trapezoid rule over the x axis on the red dots. Each red do
 $$R_{i,1} = \frac{h}{2}[f(a)+2\sum\limits_{k=1}^{2^{i}-1} f(a+kh)+f(b)]$$
 with $h$ the step-size. The reason why the upper limit of the sum is $2^{i}-1$ is because by construction we always halve h each step.
 
-At this point to get the next values in each row we take advantage of Richardson's Extrapolation. This formula cancels the error contributes, making each step more precise. In particular the error of $R_{i,j}$ is of $O(h^{2j})$. The way we cancel the contributes is given by the following relation $R_{i,j}=\frac{4^{j-1}R{i,j-1}-R_{i-1,j-1}}{4^{j-1}-1}$.
+At this point to get the next values in each row we take advantage of Richardson's Extrapolation. This formula cancels the error contributes, making each step more precise. In particular the error of $R_{i,j}$ is of $O(h^{2j})$. The way we cancel the contributes is given by the following relation $R_{i,j}=\frac{4^{j-1}R_{i,j-1}-R_{i-1,j-1}}{4^{j-1}-1}$.
 This is thus how we proceed in filling the table of approximations.
 
 ![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
 
 To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i,j-1}|$.
-### Extensions of the Solution
+### Extensions of the Solution - Adaptive quadrature
 What's been presented is the basic approach. A problematic that arose is that by being in $3$ dimensions, the number of points for each trapezoidal rule grows as a cube. This is really bad if the size of the domain is large enough, since small steps require huge computational amount of time. For this reason is wise to require a good precision only where is needed. This is the idea on which adaptive quadrature works on.
 The technique is quite straightforward:
 - The integral with it's error is computed
@@ -203,4 +203,5 @@ Of course this technique has also slight disadvantages, one of which is that the
 A final note is on how the domain is split.
 ![inner domain split](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/innerDomainSplit.png)
 Being in 3 dimensions, what's been done is splitting the domain in the 3D-equivalent of bisecting a line. In this way every split creates $2^3=8$ separate subdomains.
+
 

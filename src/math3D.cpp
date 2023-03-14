@@ -286,16 +286,13 @@ double Integral3D::operator()(const Function3D &function, double &finalError, do
 	}
 	Parallelepiped domain = rectanglifyDomain(function);
 	finalError = 0; // reset error
-
 	// if domain has at least one coordinate that doesn't have width, it's
 	// 2 dimensional, and 3D integrals on 2D surfaces are 0
 	if(domain.xwidth==0 or domain.ywidth==0 or domain.zwidth==0){
 		return 0;
 	}
-
-	// execution of the calculation
 	approximationFlag = ERROR_INTEGRATION_FLAG_BASE_STATE;
-	double r = improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR);
+	double r = rombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR);
 	if(approximationFlag == ERROR_INTEGRATION_FLAG_TRIGGERED_STATE){
 		std::cerr << WARNING_LOG << "at least one recursion reached maximum depth."
 					<< " Error may be greater than the one required." << std::endl;
@@ -307,186 +304,13 @@ double Integral3D::operator()(const Function3D &function, double &finalError, do
 
 // functions related to the evaluation of the integral:
 
-// Function that manages the integral domains and calls other functions to actually compute the integral.
-// What it does is checking if the domains are unbounded, and if they are it splits the domain into a part that
-// is finite, and up to other 8 unbounded parts. The unbounded parts (for a given coordinate) are of the type (-inf,a)
-// or (a,+infy), and since each coordinate can assume up to 2 unbounded intervals, the maximum number is if all the 3 coordinates
-// assume both this interval. From this 2*2*2=8.
-// "axis" refers to the coordinate that is being observed. The order is 0="x" -> 1="y" -> 2="z".
-// xSubstitution,ySubstitution,zSubstitution are three variables to remember if it's the domain being watched is unbounded.
-// They assume the values {-1,0,1}, where -1: unbounded from left, 0 bounded, 1 unbounded from right. It's called
-// substitution because later in the code being unbounded will be resolved via a coordinante substitution.
-double Integral3D::improperRombergIntegral(const Function3D &function, const Parallelepiped &domain,
-											const double &epsilon, double &finalError, const int &MAXN, const int &MAXR,
-											const int &axis, const int &xSubstitution, const int &ySubstitution){
-	if(axis==0){
-		// check if the width is 2*infinity, to see if it's unbounded
-		// on both sides
-		if(domain.xwidth>=2*COORDINATE_INFINITY){
-			// domain is split into (-inf,-a), (-a,a), (a,+inf)
-			Parallelepiped dLeft(domain),dMid(domain),dRight(domain);
-			dLeft.xwidth = dLeft.xwidth/2-MAX_BOUNDED_SIZE;
-
-			dMid.vertex.x = (dMid.vertex.x+dMid.xwidth/2)-MAX_BOUNDED_SIZE;
-			dMid.xwidth = 2*MAX_BOUNDED_SIZE;
-
-			dRight.vertex.x = MAX_BOUNDED_SIZE;
-			dRight.xwidth = dRight.xwidth/2-MAX_BOUNDED_SIZE;
-			
-			return improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,1,-1)+
-					improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,1,0)+
-					improperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,1,1);
-		}else if(domain.xwidth>=COORDINATE_INFINITY){
-			// check if the width is infinity(but less than 2*inf), to see if it's unbounded
-			// on only one side. Which side is unbounded must be understood.
-
-			// if it's unbounded on the right the vertex is above -inf 
-			if(domain.vertex.x > -COORDINATE_INFINITY){
-				Parallelepiped dMid(domain),dRight(domain);
-
-				dMid.xwidth = MAX_BOUNDED_SIZE;
-
-				dRight.vertex.x = dRight.vertex.x+MAX_BOUNDED_SIZE;
-				dRight.xwidth = dRight.xwidth-MAX_BOUNDED_SIZE;
-				
-				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,1,0)+
-						improperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,1,1);
-			}else{
-				Parallelepiped dLeft(domain),dMid(domain);
-
-				dMid.vertex.x = (dMid.vertex.x+dMid.xwidth)-MAX_BOUNDED_SIZE;
-				dMid.xwidth = MAX_BOUNDED_SIZE;
-
-				dLeft.xwidth = dLeft.xwidth-MAX_BOUNDED_SIZE;
-				
-				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,1,xSubstitution,0)+
-						improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,1,xSubstitution,-1);
-			}
-		}else{
-			// if domain is "finite"(aka the width is below the maximum allowed)
-			return improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,1,0);
-		}
-	}else if(axis==1){
-		// same process for "y"
-
-		if(domain.ywidth>=2*COORDINATE_INFINITY){
-			// double unbounded
-			Parallelepiped dLeft(domain),dMid(domain),dRight(domain);
-			dLeft.ywidth = dLeft.ywidth/2-MAX_BOUNDED_SIZE;
-
-			dMid.vertex.y = (dMid.vertex.y+dMid.ywidth/2)-MAX_BOUNDED_SIZE;
-			dMid.ywidth = 2*MAX_BOUNDED_SIZE;
-
-			dRight.vertex.y = MAX_BOUNDED_SIZE;
-			dRight.ywidth = dRight.ywidth/2-MAX_BOUNDED_SIZE;
-			
-			return improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,2,xSubstitution,-1)+
-					improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0)+
-					improperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,2,xSubstitution,1);
-		}else if(domain.ywidth>=COORDINATE_INFINITY){
-			// single unbounded
-
-			if(domain.vertex.y > -COORDINATE_INFINITY){
-				Parallelepiped dMid(domain),dRight(domain);
-
-				dMid.ywidth = MAX_BOUNDED_SIZE;
-
-				dRight.vertex.y = dRight.vertex.y+MAX_BOUNDED_SIZE;
-				dRight.ywidth = dRight.ywidth-MAX_BOUNDED_SIZE;
-				
-				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0)+
-						improperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,2,xSubstitution,1);
-			}else{
-				Parallelepiped dLeft(domain),dMid(domain);
-
-				dMid.vertex.y = (dMid.vertex.y+dMid.ywidth)-MAX_BOUNDED_SIZE;
-				dMid.ywidth = MAX_BOUNDED_SIZE;
-
-				dLeft.ywidth = dLeft.ywidth-MAX_BOUNDED_SIZE;
-
-				return improperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0)+
-						improperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,2,xSubstitution,-1);
-			}
-		}else{
-			return improperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,2,xSubstitution,0);
-		}
-	}else if(axis==2){
-		// if it's z axis instead of doing recursion we call functions to actually
-		// compute the integral
-
-		// check if the width is 2*infinity, to see if it's unbounded
-		// on both sides
-		if(domain.zwidth>=2*COORDINATE_INFINITY){
-			std::cout << "::"<<xSubstitution<<","<<ySubstitution<<","<<domain.zwidth<<"-"<<2*COORDINATE_INFINITY<<"\n";
-			Parallelepiped dLeft(domain),dMid(domain),dRight(domain);
-			dLeft.zwidth = dLeft.zwidth/2-MAX_BOUNDED_SIZE;
-
-			dMid.vertex.z = (dMid.vertex.z+dMid.zwidth/2)-MAX_BOUNDED_SIZE;
-			dMid.zwidth = 2*MAX_BOUNDED_SIZE;
-
-			dRight.vertex.z = MAX_BOUNDED_SIZE;
-			dRight.zwidth = dRight.zwidth/2-MAX_BOUNDED_SIZE;
-
-			return evaluateImproperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,-1)+
-					evaluateImproperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0)+
-					evaluateImproperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,1);
-		}else if(domain.zwidth>=COORDINATE_INFINITY){
-			// single unbounded
-			
-			// if it's unbounded on the right the vertex is above -inf 
-			if(domain.vertex.z > -COORDINATE_INFINITY){			
-				Parallelepiped dMid(domain),dRight(domain);
-
-				dMid.zwidth = MAX_BOUNDED_SIZE;
-
-				dRight.vertex.z = dRight.vertex.z+MAX_BOUNDED_SIZE;
-				dRight.zwidth = dRight.zwidth-MAX_BOUNDED_SIZE;
-				
-				return evaluateImproperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0)+
-						evaluateImproperRombergIntegral(function,dRight,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,1);
-			}else{
-				Parallelepiped dLeft(domain),dMid(domain);
-
-				dMid.vertex.z = (dMid.vertex.z+dMid.zwidth)-MAX_BOUNDED_SIZE;
-				dMid.zwidth = MAX_BOUNDED_SIZE;
-
-				dLeft.zwidth = dLeft.zwidth-MAX_BOUNDED_SIZE;
-				
-				return evaluateImproperRombergIntegral(function,dMid,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0)+
-						evaluateImproperRombergIntegral(function,dLeft,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,-1);
-			}
-		}else{
-			return evaluateImproperRombergIntegral(function,domain,epsilon,finalError,MAXN,MAXR,xSubstitution,ySubstitution,0);
-		}
-	}
-	return 0;
-}
-
-// This function receives a domain that may be unbounded, but it's already been processed by improperRombergIntegral().
-// Even if it's called evaluateImproperRombergIntegral it can also evaluate standard integrals. In fact what it does
-// it taking in arbitrary domains, converting them into bounded domains, and them evaluate the standard integral.
-double Integral3D::evaluateImproperRombergIntegral(const Function3D &function, const Parallelepiped &domain,
-													const double &epsilon, double &finalError, const int &MAXN,
-													const int &MAXR, const int &xSubstitution, const int &ySubstitution,
-													const int &zSubstitution){
-	Parallelepiped newDomain(domain);
-	// transform domain into a bounded one
-	int sign = changeDomainOfIntegration(newDomain,xSubstitution,ySubstitution,zSubstitution);
-	return sign*rombergIntegral(function,newDomain,epsilon,finalError,MAXN,MAXR);
-}
-
-// This function is responsable to actually calculate the integral using Romberg's algorithm, with adaptive
+// This function is responsable to calculate the integral using Romberg's algorithm, with adaptive
 // quadrature. MAXN is the maximum depth of Romberg's algorithm, whilst MAXR is the maximum recursion depth.
 // "recursion" keeps track of the recursion depth the function is in, by default it's 0.
 double Integral3D::rombergIntegral(const Function3D &function, const Parallelepiped &domain,
 									const double &epsilon, double &finalError, const int &MAXN, const int &MAXR,
 									const int &recursion){
 	// If received domain has depth 0 on any dimension, the integral is 0.
-	// std::cout << domain.vertex.x << " "<<domain.vertex.y<<" "<<domain.vertex.z<<"\n";
-	// std::cout << domain.xwidth << " "<<domain.ywidth<<" "<<domain.zwidth<<"\n";
-	std::cout << domain.vertex.x << " " << domain.vertex.y << " " << domain.vertex.z << std::endl;
-	std::cout << domain.xwidth << " " << domain.ywidth << " " << domain.zwidth << std::endl;
-	std::cout << isXSubstituted << " " << isYSubstituted << " " << isZSubstituted << "\n\n";
 	if(domain.xwidth==0 or domain.ywidth==0 or domain.zwidth==0){
 		return 0;
 	}
@@ -507,17 +331,12 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 			R[i][j] = ( temp*R[i][j-1]-R[i-1][j-1] )/( temp-1 ); // Richardson's extrapolation
 		}
 		// checking for early stop if error tolerance is met
-		if(std::fabs(R[i-1][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0 and R[i-1][i-1]!=0){
-			finalError += std::fabs(R[i-1][i-1]-R[i][i]); 
+		// 0s are excluded cause it may be not enough refined to find
+		// points inisde the domain
+		if(std::fabs(R[i][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0 and R[i][i-1]!=0){
+			finalError += std::fabs(R[i][i-1]-R[i][i]); 
 			return R[i][i];
 		}
-	}
-
-	for(int k=0;k<MAXN;++k){
-		for(int p=0;p<=k;++p){
-			std::cout << R[k][p] << " ";
-		}
-		std::cout << std::endl;
 	}
 
 	// adaptive integration implementation
@@ -535,11 +354,14 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 	}
 
 	// if both MAXN and MAXR are reached the "best" value obtained is returned
-	approximationFlag = ERROR_INTEGRATION_FLAG_TRIGGERED_STATE;
+	if(R[MAXN-1][MAXN-1]!=0){
+		std::cout << R[MAXN-1][MAXN-1] << " " << R[MAXN-2][MAXN-2] << "\n";
+		approximationFlag = ERROR_INTEGRATION_FLAG_TRIGGERED_STATE;
+	}
 	if(MAXN==1){
-		finalError += R[0][0];
+		finalError += std::fabs(R[0][0]);
 	}else{
-		finalError += std::fabs(R[MAXN-2][MAXN-2]-R[MAXN-1][MAXN-1]); 
+		finalError += std::fabs(R[MAXN-1][MAXN-2]-R[MAXN-1][MAXN-1]); 
 	}
 	return R[MAXN-1][MAXN-1];
 }
@@ -549,16 +371,8 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 // Standard trapezoidal rule is applied on "x" axis, but for every point it's applied the
 // trapezoidal rule over the "y" axis, and for every point of the "y" axis it's applied the
 // trapezoidal rule over the "z" axis, over which a standard trapezoidal rule is used.
-// "axis" represent the axis over which the trapezoidal rule is being applied on,
-// 0="x", 1="y" and 2="z". "fixedX" and "fixedY" are the constant values over which
-// the trapezoidal rule is applied. Either "y"(with fixedX constant), or "z"(with both fixedX and
-// fixedY constant).
-
-
-
 double Integral3D::directionedTrapezoidIntegral(const Function3D &function, const Parallelepiped &domain,
-													const int &n, const int &axis, const double &fixedX,
-													const double &fixedY) const{
+													const int &n) const{
 	int i,j,k;
 	double hx,hy,hz,sumx,sumy,sumz,temp;
 	hx = domain.xwidth/(n+1);
@@ -573,11 +387,7 @@ double Integral3D::directionedTrapezoidIntegral(const Function3D &function, cons
 			// every point is a new one
 			if(i%2==1 or j%2==1 or n==0){
 				for(k=0;k<=n+1;++k){
-					temp = function(standardInverseChangeOfVariableFunction(domain.vertex.x+i*hx,"x"),
-								standardInverseChangeOfVariableFunction(domain.vertex.y+j*hy,"y"),
-								standardInverseChangeOfVariableFunction(domain.vertex.z+k*hz,"z"))*
-								changeOfVariableDifferential(domain.vertex.x+i*hx,domain.vertex.y+j*hy,
-																domain.vertex.z+k*hz);
+					temp = function(domain.vertex.x+i*hx,domain.vertex.y+j*hy,domain.vertex.z+k*hz);
 					if(k==0 or k==n+1){
 						temp *= 0.5;
 					}
@@ -586,11 +396,7 @@ double Integral3D::directionedTrapezoidIntegral(const Function3D &function, cons
 			}else{
 				// case when some of the values has already been accounted for
 				for(k=1;k<=n;k+=2){
-					sumz += function(standardInverseChangeOfVariableFunction(domain.vertex.x+i*hx,"x"),
-								standardInverseChangeOfVariableFunction(domain.vertex.y+j*hy,"y"),
-								standardInverseChangeOfVariableFunction(domain.vertex.z+k*hz,"z"))*
-								changeOfVariableDifferential(domain.vertex.x+i*hx,domain.vertex.y+j*hy,
-																domain.vertex.z+k*hz);
+					sumz += function(domain.vertex.x+i*hx,domain.vertex.y+j*hy,domain.vertex.z+k*hz);
 				}
 			}
 			if(j==0 or j==n+1){
@@ -604,98 +410,6 @@ double Integral3D::directionedTrapezoidIntegral(const Function3D &function, cons
 		sumx += sumy;
 	}
 	return hx*hy*hz*sumx;
-}
-
-// functions related to the change of variable:
-
-// this is the change of variable function used for the improper integrals
-double Integral3D::standardChangeOfVariableFunction(const double &value) const{
-	// e^x/(1+e^x) = 1-1/(1+e^x)
-	return 1-1/(1+pow(M_E,value));
-}
-
-// this is the inverse change of variable function used for the improper integrals
-double Integral3D::standardInverseChangeOfVariableFunction(const double &value,
-															const std::string &coordinate) const{
-	if((isXSubstituted!=0 and coordinate=="x")
-		or (isYSubstituted!=0 and coordinate=="y")
-		or (isZSubstituted!=0 and coordinate=="z")){
-		// e^x/(1+e^x) = 1-1/(1+e^x)
-		return -log(-1+1/value);
-	}
-	return value;
-}
-
-// function that takes in input the variables x,y or z, and returns the changed
-// variable(if it doesn't need a transformation the "transformation" is the identity)
-double Integral3D::changeVariable(const double &coordinate, const double &axis) const{
-	if(axis==0 and isXSubstituted){
-		return standardChangeOfVariableFunction(coordinate);
-	}else if(axis==1 and isYSubstituted){
-		return standardChangeOfVariableFunction(coordinate);
-	}else if(axis==2 and isZSubstituted){
-		return standardChangeOfVariableFunction(coordinate);
-	}
-	return coordinate;
-}
-
-// Function that update the state of the necessary substitution to make.
-// Default values are 0,0,0, so an empty call reset the state.
-void Integral3D::setChangeOfVariable(const int &xSubstitution, const int &ySubstitution,
-										const int &zSubstitution){
-	isXSubstituted = xSubstitution;
-	isYSubstituted = ySubstitution;
-	isZSubstituted = zSubstitution;
-}
-
-// function that calculates the updated differential, due to a possible change of variables,
-// if there are none 1 is returned
-double Integral3D::changeOfVariableDifferential(const double &u, const double &v, const double &w) const{
-	double r = 1;
-	if(isXSubstituted){
-		if(u==1 or u==0){
-			// this values gives infinite contribute,
-			// to prevent infinities 0 is returned.
-			// removing a point from the integration doesn't affect
-			// the integral
-			return 0;
-		}
-		// since the input is already transformed, and since the
-		// differential is expressed in terms of x, the inverse
-		// function is called
-		double x = standardInverseChangeOfVariableFunction(u,"x");
-		if(x<10){
-			// standard differential contribution
-			r *= pow(1+pow(M_E,x),2)/pow(M_E,x);
-		}else{
-			// approximation for large "x"s
-			r *= pow(M_E,x);
-		}
-	}
-	// same logic for the other variables
-	if(isYSubstituted){
-		if(v==1 or v==0){
-			return 0;
-		}
-		double y = standardInverseChangeOfVariableFunction(v,"y");
-		if(y<10){
-			r *= pow(1+pow(M_E,y),2)/pow(M_E,y);
-		}else{
-			r *= pow(M_E,y);
-		}
-	}
-	if(isZSubstituted){
-		if(w==1 or w==0){
-			return 0;
-		}
-		double z = standardInverseChangeOfVariableFunction(w,"z");
-		if(z<10){
-			r *= pow(1+pow(M_E,z),2)/pow(M_E,z);
-		}else{
-			r *= pow(M_E,z);
-		}
-	}
-	return r;
 }
 
 // functions related to the domain management:
@@ -712,6 +426,7 @@ Parallelepiped Integral3D::rectanglifyDomain(const Function3D &function) const{
 	applyInequality(function.getInequality(1),xMin,xMax,yMin,yMax,zMin,zMax);
 	// analyzing second inequality
 	applyInequality(function.getInequality(2),xMin,xMax,yMin,yMax,zMin,zMax);
+	makeDomainFinite(xMin,xMax,yMin,yMax,zMin,zMax);
 	return Parallelepiped(Point3D(xMin,yMin,zMin),xMax-xMin,yMax-yMin,zMax-zMin);
 }
 
@@ -741,6 +456,39 @@ void Integral3D::applyInequality(const Inequality &inequality, double &xMin, dou
 	}
 	if(max<zMax){
 		zMax = max;
+	}
+}
+
+void Integral3D::makeDomainFinite(double &xMin, double &xMax, double &yMin, double &yMax, double &zMin, double &zMax) const{
+	if(xMax-xMin>=2*COORDINATE_INFINITY){
+		xMin = -MAX_BOUNDED_SIZE/2;
+		xMax = MAX_BOUNDED_SIZE/2;
+	}else if(xMax-xMin>=COORDINATE_INFINITY){
+		if(xMin==-COORDINATE_INFINITY){
+			xMin = xMax-MAX_BOUNDED_SIZE;
+		}else if(xMax==COORDINATE_INFINITY){
+			xMax = xMin+MAX_BOUNDED_SIZE;
+		}
+	}
+	if(yMax-yMin>=2*COORDINATE_INFINITY){
+		yMin = -MAX_BOUNDED_SIZE/2;
+		yMax = MAX_BOUNDED_SIZE/2;
+	}else if(yMax-yMin>=COORDINATE_INFINITY){
+		if(yMin==-COORDINATE_INFINITY){
+			yMin = yMax-MAX_BOUNDED_SIZE;
+		}else if(yMax==COORDINATE_INFINITY){
+			yMax = yMin+MAX_BOUNDED_SIZE;
+		}
+	}
+	if(zMax-zMin>=2*COORDINATE_INFINITY){
+		zMin = -MAX_BOUNDED_SIZE/2;
+		zMax = MAX_BOUNDED_SIZE/2;
+	}else if(zMax-zMin>=COORDINATE_INFINITY){
+		if(zMin==-COORDINATE_INFINITY){
+			zMin = zMax-MAX_BOUNDED_SIZE;
+		}else if(zMax==COORDINATE_INFINITY){
+			zMax = zMin+MAX_BOUNDED_SIZE;
+		}
 	}
 }
 
@@ -910,6 +658,7 @@ void Integral3D::getRange(const Inequality &_inequality, const std::string &axis
 		}
 	}
 }
+
 
 // function used for the adaptive strategy, it split the domain in 8 equal-sized subdomains
 void Integral3D::splitDomain(const Parallelepiped &domain, std::vector<Parallelepiped> &newD) const{
