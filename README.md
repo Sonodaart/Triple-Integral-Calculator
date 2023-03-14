@@ -48,6 +48,7 @@ In addition it's require to have a shared library to be dynamically linked. To c
 #define EXPORT_SYMBOL __attribute__((visibility("default")))
 #endif
 #include <map>
+#include <string>
 
 EXPORT_SYMBOL double f(double x, double y, double z) {
 	return 5*x+y;
