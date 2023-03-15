@@ -50,7 +50,7 @@ In addition it's require to have a shared library to be dynamically linked. To c
 #include <map>
 #include <string>
 
-EXPORT_SYMBOL double f(double x, double y, double z) {
+EXPORT_SYMBOL double f(double x, double y, double z){
 	return 5*x+y;
 }
 
