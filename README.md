@@ -51,11 +51,14 @@ In addition it's require to have a shared library to be dynamically linked. To c
 #include <map>
 #include <string>
 
-EXPORT_SYMBOL double f(double x, double y, double z){
+EXPORT_SYMBOL double f(double x, double y, double z);
+EXPORT_SYMBOL std::map<std::string,double> first,second;
+
+double f(double x, double y, double z){
 	return 5*x+y;
 }
 
-EXPORT_SYMBOL std::map<std::string,double> first = {
+std::map<std::string,double> first = {
 	{"x^2",1},
 	{"y^2",2},
 	{"z^2",1},
@@ -63,7 +66,7 @@ EXPORT_SYMBOL std::map<std::string,double> first = {
 	{"<",1}
 };
 
-EXPORT_SYMBOL std::map<std::string,double> second = {
+std::map<std::string,double> second = {
 	{"y",1},
 	{">",1}
 };
@@ -91,7 +94,7 @@ Having the possibility to write actual C or C++ code for the function, extensive
 In addition, it's possible to personalize the domain of integration even further via the use of conditionals.
 For instance if it's desired to integrate over a cube of side 1, it's possible to hard code it into the function. For the domain it's used a sensible approximation of the domain(one that contains the wanted domain, but isn't excessively large, since it affects both performances as precision):
 ```c++
-EXPORT_SYMBOL double f(double x, double y, double z){
+double f(double x, double y, double z){
 	if(x==0 and y==0 and z==0){
 		return 0;
 	}
@@ -101,7 +104,7 @@ EXPORT_SYMBOL double f(double x, double y, double z){
 	return 0;
 }
 
-EXPORT_SYMBOL std::map<std::string,double> first = {
+std::map<std::string,double> first = {
 	{"x^2",1},
 	{"y^2",1},
 	{"z^2",1},
@@ -109,10 +112,11 @@ EXPORT_SYMBOL std::map<std::string,double> first = {
 	{"<",1}
 };
 
-EXPORT_SYMBOL std::map<std::string,double> second = first;
+std::map<std::string,double> second = first;
 ```
 To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
 It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral.
+
 Additionally it must also be mentioned that domains with sides bigger than MAX_BOUNDED_SIZE (in math3D.cpp) will be cut to have that maximum side length.
 # Underlying theory
 ## Mathematical Formulation of the Problem

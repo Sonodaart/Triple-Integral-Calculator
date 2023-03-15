@@ -6,19 +6,22 @@
 #include <map>
 #include <string>
 
-EXPORT_SYMBOL double f(double x, double y, double z) {
-	return 5*x+y;
+EXPORT_SYMBOL double f(double x, double y, double z);
+EXPORT_SYMBOL std::map<std::string,double> first,second;
+
+double f(double x, double y, double z){
+	return 5*x*x+y;
 }
 
-EXPORT_SYMBOL std::map<std::string,double> first = {
+std::map<std::string,double> first = {
 	{"x^2",1},
 	{"y^2",2},
 	{"z^2",1},
-	{"r",-10},
+	{"r",-5},
 	{"<",1}
 };
 
-EXPORT_SYMBOL std::map<std::string,double> second = {
+std::map<std::string,double> second = {
 	{"y",1},
 	{">",1}
 };
