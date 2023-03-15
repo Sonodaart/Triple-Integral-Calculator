@@ -6,7 +6,7 @@
 ##  Table of Contents
 
 - [File Management](#file-management)
-- [Usage](#table-of-contents)
+- [Usage](#usage)
 	- [Compilation](#compilation)
 	- [Execution](#execution)
 	- [Advanced usages](#advanced-usages)
