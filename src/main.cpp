@@ -35,21 +35,25 @@ int isDouble(const char *array){
 }
 
 // function to load a double
-void loadDouble(const char *array, double &value, const std::string &variableName){
+int loadDouble(const char *array, double &value, const std::string &variableName){
 	if(!isDouble(array)){
 		std::cerr << USAGE_LOG << variableName << " error should be a positive double." << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
+		return 1;
 	}
 	value = std::atof(array);
+	return 0;
 }
 
 // function to load integer into maxn value
-void loadInteger(const char *array, int &value, const std::string &variableName){
+int loadInteger(const char *array, int &value, const std::string &variableName){
 	if(!isInteger(array)){
-		std::cerr << USAGE_LOG << variableName << "should be an integer >=-1." << std::endl;
+		std::cerr << USAGE_LOG << variableName << " should be an integer >=-1." << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "exiting program." << std::endl;
+		return 1;
 	}
 	value = std::atoi(array);
+	return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -58,7 +62,7 @@ int main(int argc, char *argv[]) {
 	// setting parameters to default value
 	error = maxn = maxr = -1;
 	if(argc < 2){
-		std::cerr << USAGE_LOG << argv[0] << "<shared library name(*.so)>" << std::endl;
+		std::cerr << USAGE_LOG << argv[0] << " <shared library name(*.so)>" << std::endl;
 		std::cerr << FATAL_ERROR_LOG << "argument is mandatory, exiting program." << std::endl;
 		return 1;
 	}
@@ -66,17 +70,20 @@ int main(int argc, char *argv[]) {
 		std::cerr << CONSOLE_LOG << "using default parameters: error: " <<  DEFAULT_ERROR
 					<< ", MAXN=" << DEFAULT_MAXN << ", MAXR=" << DEFAULT_MAXR << std::endl;
 	}else if(argc == 3){
-		loadDouble(argv[2],error,"error");
 		std::cerr << CONSOLE_LOG << "using default parameters: MAXN=" << DEFAULT_MAXN
 			<< ", MAXR=" << DEFAULT_MAXR << std::endl;
+		if(loadDouble(argv[2],error,"error")){
+			return 1;
+		}
 	}else if(argc == 4){
-		loadDouble(argv[2],error,"error");
-		loadInteger(argv[3],maxn,"MAXN");
 		std::cerr << CONSOLE_LOG << "using default parameters: MAXR=" << DEFAULT_MAXR << std::endl;
+		if(loadDouble(argv[2],error,"error") or loadInteger(argv[3],maxn,"MAXN")){
+			return 1;
+		}
 	}else{
-		loadDouble(argv[2],error,"error");
-		loadInteger(argv[3],maxn,"MAXN");
-		loadInteger(argv[4],maxr,"MAXR");
+		if(loadDouble(argv[2],error,"error") or loadInteger(argv[3],maxn,"MAXN") or loadInteger(argv[4],maxr,"MAXR")){
+			return 1;
+		}
 	}
 
 	// link dynamic library's function into DynamicFunction object

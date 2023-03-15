@@ -81,7 +81,7 @@ int Inequality::isCallable() const{
 }
 
 // operator() that execute the Inequality calculation, and return wether it's
-// it's a true statement(1) or not(0).
+// it's a true statement(1) or not(0). In case of error -1 is returned.
 int Inequality::operator()(const double &x, const double &y, const double &z) const{
 	if(!isCallable()){
 		std::cerr << WARNING_LOG << "trying to call non initialised inequality." << std::endl;
@@ -203,7 +203,6 @@ double Function3D::operator()(const double &x, const double &y, const double &z)
 		// in all non-domain points
 		return 0;
 	}
-	// std::cout << ">"<<x<<" "<<y<<" "<<z<<" "<<function(x,y,z)<<std::endl;
 	return function(x,y,z);
 }
 
@@ -325,7 +324,6 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 	for(i=1;i<MAXN;++i){
 		// trapezoidal integral using successing refinements
 		R[i][0] = R[i-1][0]/8+directionedTrapezoidIntegral(function, domain, pow(2,i)-1);
-		// std::cout << R[i][0]<<"\n";
 		for(j=1;j<=i;++j){
 			temp = pow(4,j);
 			R[i][j] = ( temp*R[i][j-1]-R[i-1][j-1] )/( temp-1 ); // Richardson's extrapolation
@@ -355,7 +353,6 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 
 	// if both MAXN and MAXR are reached the "best" value obtained is returned
 	if(R[MAXN-1][MAXN-1]!=0){
-		std::cout << R[MAXN-1][MAXN-1] << " " << R[MAXN-2][MAXN-2] << "\n";
 		approximationFlag = ERROR_INTEGRATION_FLAG_TRIGGERED_STATE;
 	}
 	if(MAXN==1){

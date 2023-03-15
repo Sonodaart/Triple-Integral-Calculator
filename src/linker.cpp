@@ -46,21 +46,20 @@ int DynamicFunction::closeLibrary(){
 		// if it's non open no need to close it
 		return 0;
 	}
+	setState(0);
 	if (dlclose(handle) != 0){
 		std::cerr << ERROR_LOG << "an unexpected error has occurred while closing the handle: "
 					<< dlerror() << std::endl;
 		handle = nullptr;
-		setState(0);
 		return 1;
 	}
 	handle = nullptr;
-	setState(0);
 	return 0;
 }
 
 // function to load a shared library(.so) given the name of the file
 // to be noted that the function returns the state of the operation(0: okay, 1: error)
-int DynamicFunction::loadLibrary(char fileName[]){
+int DynamicFunction::loadLibrary(const char fileName[]){
 	if(isLibraryLoaded()){
 		if(closeLibrary()){
 			std::cerr << WARNING_LOG << "failed closing the last library while opening new library."

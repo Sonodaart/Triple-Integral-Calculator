@@ -16,5 +16,5 @@ int isDouble(const char *array);
 int isInteger(const char *array);
 
 // functions to load values into variables
-void loadDouble(const char*, double&, const std::string&);
-void loadInteger(const char*, int&, const std::string&);
+int loadDouble(const char*, double&, const std::string&);
+int loadInteger(const char*, int&, const std::string&);
