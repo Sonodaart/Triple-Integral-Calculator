@@ -115,7 +115,6 @@ std::map<std::string,double> first = {
 std::map<std::string,double> second = first;
 ```
 To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
-It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral.
 
 Additionally it must also be mentioned that domains with sides bigger than MAX_BOUNDED_SIZE (in math3D.cpp) will be cut to have that maximum side length.
 # Underlying theory
