@@ -331,8 +331,8 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 		// checking for early stop if error tolerance is met
 		// 0s are excluded cause it may be not enough refined to find
 		// points inisde the domain
-		if(std::fabs(R[i][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0 and R[i][i-1]!=0){
-			finalError += std::fabs(R[i][i-1]-R[i][i]); 
+		if(std::fabs(R[i-1][i-1]-R[i][i])<epsilon and i-1>=0 and R[i][i]!=0 and R[i][i-1]!=0){
+			finalError += std::fabs(R[i-1][i-1]-R[i][i]); 
 			return R[i][i];
 		}
 	}
@@ -358,7 +358,7 @@ double Integral3D::rombergIntegral(const Function3D &function, const Parallelepi
 	if(MAXN==1){
 		finalError += std::fabs(R[0][0]);
 	}else{
-		finalError += std::fabs(R[MAXN-1][MAXN-2]-R[MAXN-1][MAXN-1]); 
+		finalError += std::fabs(R[MAXN-2][MAXN-2]-R[MAXN-1][MAXN-1]); 
 	}
 	return R[MAXN-1][MAXN-1];
 }
