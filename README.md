@@ -1,6 +1,7 @@
 
 
 
+
 # Triple Integral calculator
 
 ##  Table of Contents
@@ -111,7 +112,7 @@ EXPORT_SYMBOL std::map<std::string,double> first = {
 EXPORT_SYMBOL std::map<std::string,double> second = first;
 ```
 To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
-It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral(and also the error may be an underestimate of the actual one). This is because we introduce a discontinuity all around the custom domain, and the algorithm assume the function is continuous.
+It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral.
 Additionally it must also be mentioned that domains with sides bigger than MAX_BOUNDED_SIZE (in math3D.cpp) will be cut to have that maximum side length.
 # Underlying theory
 ## Mathematical Formulation of the Problem
@@ -192,7 +193,7 @@ This is thus how we proceed in filling the table of approximations.
 
 ![Romberg's method](https://raw.githubusercontent.com/Sonodaart/Triple-Integral-Calculator/main/romberg.png)
 
-To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i-1,j-1}|$.
+To estimate the error we can watch two consecutive values of R, such that $\epsilon \equiv |R_{i,j}-R_{i-1,j-1}|$. To be noted, that since the domain is a subdomain of the parallelepiped into which it's contained, the error may end up an underestimation of the actual error. This is because with this approach a discontinuity is introduced, while the algorithm assumes $f$ to be continuous.
 ### Extensions of the Solution - Adaptive quadrature
 What's been presented is the basic approach. A problematic that arose is that by being in $3$ dimensions, the number of points for each trapezoidal rule grows as a cube. This is really bad if the size of the domain is large enough, since small steps require huge computational amount of time. For this reason is wise to require a good precision only where is needed. This is the idea on which adaptive quadrature works on.
 The technique is quite straightforward:
