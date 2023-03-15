@@ -90,7 +90,7 @@ Having the possibility to write actual C or C++ code for the function, extensive
 In addition, it's possible to personalize the domain of integration even further via the use of conditionals.
 For instance if it's desired to integrate over a cube of side 1, it's possible to hard code it into the function. For the domain it's used a sensible approximation of the domain(one that contains the wanted domain, but isn't excessively large, since it affects both performances as precision):
 ```c++
-EXPORT_SYMBOL double f(double x, double y, double z) {
+EXPORT_SYMBOL double f(double x, double y, double z){
 	if(x==0 and y==0 and z==0){
 		return 0;
 	}
@@ -112,6 +112,7 @@ EXPORT_SYMBOL std::map<std::string,double> second = first;
 ```
 To be noted how it's important to remove eventual points that doesn't belong to the actual domain such as $(0,0,0)$ for this function.
 It must be mentioned that even thought this approach add more flexibility, the downside is that the algorithm has to do more work to properly approximate the integral. This is because we introduce a discontinuity all around the custom domain, and the algorithm assume the function is continuous.
+Additionally it must also be mentioned that domains with sides bigger than MAX_BOUNDED_SIZE (in math3D.cpp) will be cut to have that maximum side length.
 # Underlying theory
 ## Mathematical Formulation of the Problem
 The objective of the program is to numerically approximate(with a certain error) the value that would assume the corresponding Lesbegue integration.
