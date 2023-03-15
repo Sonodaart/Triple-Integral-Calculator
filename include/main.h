@@ -2,7 +2,8 @@
 // Contact: gabriele.fazio@studenti.unimi.it
 // Date: 30/01/2023
 // Functionality: Program that calculates triple integrals over a domain
-// specified
+// specified. For more info refer to
+// https://github.com/Sonodaart/Triple-Integral-Calculator/blob/main/README.md
 
 #include <iostream>
 

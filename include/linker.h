@@ -7,9 +7,7 @@
 
 #include <iostream>
 #include <map>
-#include <vector>
 #include <string>
-#include <memory>
 #include <cstdlib>
 #include <dlfcn.h>
 
@@ -37,7 +35,7 @@ class DynamicFunction : public Function3D{
 
 		// functions to manage library linking
 		int closeLibrary();
-		int loadLibrary(char[]);
+		int loadLibrary(const char[]);
 		int loadLibrary(const std::string&);
 		int isLibraryLoaded();
 

@@ -7,8 +7,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <string>
 #include <limits>
+#include <string>
 #include <cmath>
 
 // values for optional parameters:
@@ -21,9 +21,8 @@
 // not passed, the state 0 is implied
 #define ZERO_STATE 0
 
-
 #define DEFAULT_INEQUALITY ">"
-#define COORDINATE_INFINITY 100000
+#define COORDINATE_INFINITY std::numeric_limits<double>::max()/2
 #define MAX_BOUNDED_SIZE 100
 
 #include "../include/error.h"
@@ -45,7 +44,7 @@ typedef double (*doubleFunction3D)(double, double, double);
 // To be noted that the presence of the inequality symbol
 // is only present in the map to create the inequality(and
 // thus in the shared library map too), but in the Inequality
-// object it'ss then moved into the "disequality" variable.
+// object it's then moved into the "disequality" variable.
 class Inequality{
 	public:
 		// constructors
@@ -162,8 +161,7 @@ class Parallelepiped{
 // Integral3D is an object that performs integrals. It takes in input a Function3D,
 // which posseses 2 inequalities. The class calculate the smaller rectangular domain that
 // contains such domain, and on that it performs the integral.
-// The technique on which it integrate
-// is the Romberg's algorithm, with adaptive integration.
+// The technique on which it integrate is the Romberg's algorithm, with adaptive integration.
 class Integral3D{
 	public:
 		// constructor
@@ -177,7 +175,7 @@ class Integral3D{
 							int = DEFAULT_MAXR);
 
 	private:
-		// private functions to perform math operations
+		// private functions to perform math operations:
 
 		// functions related to the evaluation of the integral
 		double rombergIntegral(const Function3D&, const Parallelepiped&, const double&, double&, const int& = DEFAULT_MAXN,
@@ -189,7 +187,6 @@ class Integral3D{
 		void applyInequality(const Inequality&, double&, double&, double&, double&, double&, double&) const;
 		void makeDomainFinite(double&, double&, double&, double&, double&, double&) const;
 		void getRange(const Inequality&, const std::string&, double&, double&) const;
-
 		void splitDomain(const Parallelepiped&, std::vector<Parallelepiped>&) const;
 
 		int approximationFlag;
